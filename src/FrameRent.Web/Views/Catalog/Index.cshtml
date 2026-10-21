@@ -38,41 +38,136 @@
                     </div>
                 </div>
 
+                <!-- DYNAMIC PRODUCT SHOWCASE CAROUSEL (WITH LIVE SPECIAL DISCOUNTS) -->
                 <div class="col-lg-5">
-                    <div class="p-4 p-md-5 rounded-4 shadow-lg text-white" 
-                         style="background: rgba(255,255,255,0.05); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.12);">
-                        <div class="d-flex align-items-center gap-3 mb-3">
-                            <div class="p-3 rounded-circle bg-warning bg-opacity-20 text-warning">
-                                <i class="bi bi-shield-check fs-2"></i>
+                    <div id="dynamicGearCarousel" class="carousel slide carousel-fade shadow-2xl rounded-4 overflow-hidden border border-white border-opacity-15" data-bs-ride="carousel" data-bs-interval="3500">
+                        <div class="carousel-inner" style="background: #0b1120;">
+                            <!-- Slide 1: Sony FX3 -->
+                            <div class="carousel-item active">
+                                <div class="position-relative" style="height: 380px;">
+                                    <img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=800&q=80" 
+                                         class="d-block w-100 h-100" style="object-fit: cover;" alt="Sony FX3 Cinema">
+                                    <div class="position-absolute top-0 start-0 m-3 d-flex flex-column gap-2">
+                                        <span class="badge bg-danger px-3 py-2 rounded-pill fw-bold shadow">
+                                            <i class="bi bi-fire me-1"></i> 25% OFF Weekend Pack
+                                        </span>
+                                        <span class="badge bg-dark bg-opacity-75 text-warning px-3 py-1 rounded-pill small">
+                                            Popular Cinema Choice
+                                        </span>
+                                    </div>
+                                    <div class="position-absolute bottom-0 start-0 end-0 p-4 text-white" 
+                                         style="background: linear-gradient(180deg, transparent 0%, rgba(9, 13, 22, 0.95) 100%);">
+                                        <div class="d-flex justify-content-between align-items-end">
+                                            <div>
+                                                <h4 class="fw-bold mb-1">Sony FX3 Cinema Camera</h4>
+                                                <div class="small text-white-50">4K 120p &bull; Dual Base ISO &bull; S-Cinetone</div>
+                                            </div>
+                                            <div class="text-end">
+                                                <span class="text-white-50 text-decoration-line-through small d-block">$160.00</span>
+                                                <span class="fs-4 fw-extrabold text-warning">$120.00<span class="fs-6 text-white-50">/day</span></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <div>
-                                <h5 class="fw-bold mb-0">Production-Ready Guarantee</h5>
-                                <span class="text-white-50 small">100% Calibrated & Tested</span>
+
+                            <!-- Slide 2: Canon RF Lens -->
+                            <div class="carousel-item">
+                                <div class="position-relative" style="height: 380px;">
+                                    <img src="https://images.unsplash.com/photo-1617005082133-548c4dd27f35?auto=format&fit=crop&w=800&q=80" 
+                                         class="d-block w-100 h-100" style="object-fit: cover;" alt="Canon RF Lens">
+                                    <div class="position-absolute top-0 start-0 m-3 d-flex flex-column gap-2">
+                                        <span class="badge bg-success px-3 py-2 rounded-pill fw-bold shadow">
+                                            <i class="bi bi-stars me-1"></i> Promo Bundle: Save 20%
+                                        </span>
+                                        <span class="badge bg-dark bg-opacity-75 text-info px-3 py-1 rounded-pill small">
+                                            Prime Cinema Glass
+                                        </span>
+                                    </div>
+                                    <div class="position-absolute bottom-0 start-0 end-0 p-4 text-white" 
+                                         style="background: linear-gradient(180deg, transparent 0%, rgba(9, 13, 22, 0.95) 100%);">
+                                        <div class="d-flex justify-content-between align-items-end">
+                                            <div>
+                                                <h4 class="fw-bold mb-1">Canon RF 24-70mm f/2.8L</h4>
+                                                <div class="small text-white-50">Optical IS &bull; Constant f/2.8 &bull; Weather Sealed</div>
+                                            </div>
+                                            <div class="text-end">
+                                                <span class="text-white-50 text-decoration-line-through small d-block">$55.00</span>
+                                                <span class="fs-4 fw-extrabold text-warning">$45.00<span class="fs-6 text-white-50">/day</span></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Slide 3: Studio Lighting Aputure -->
+                            <div class="carousel-item">
+                                <div class="position-relative" style="height: 380px;">
+                                    <img src="https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?auto=format&fit=crop&w=800&q=80" 
+                                         class="d-block w-100 h-100" style="object-fit: cover;" alt="Aputure Studio Lighting">
+                                    <div class="position-absolute top-0 start-0 m-3 d-flex flex-column gap-2">
+                                        <span class="badge bg-warning text-dark px-3 py-2 rounded-pill fw-bold shadow">
+                                            <i class="bi bi-lightning-charge-fill me-1"></i> Special Shoot Bundle
+                                        </span>
+                                        <span class="badge bg-dark bg-opacity-75 text-warning px-3 py-1 rounded-pill small">
+                                            Studio & Location Kit
+                                        </span>
+                                    </div>
+                                    <div class="position-absolute bottom-0 start-0 end-0 p-4 text-white" 
+                                         style="background: linear-gradient(180deg, transparent 0%, rgba(9, 13, 22, 0.95) 100%);">
+                                        <div class="d-flex justify-content-between align-items-end">
+                                            <div>
+                                                <h4 class="fw-bold mb-1">Aputure Light Storm 300d II</h4>
+                                                <div class="small text-white-50">350W COB LED &bull; Bowens Mount &bull; Wireless Control</div>
+                                            </div>
+                                            <div class="text-end">
+                                                <span class="text-white-50 text-decoration-line-through small d-block">$70.00</span>
+                                                <span class="fs-4 fw-extrabold text-warning">$55.00<span class="fs-6 text-white-50">/day</span></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Slide 4: DJI RS 3 Pro Gimbal -->
+                            <div class="carousel-item">
+                                <div class="position-relative" style="height: 380px;">
+                                    <img src="https://images.unsplash.com/photo-1527011046414-4781f1f94f8c?auto=format&fit=crop&w=800&q=80" 
+                                         class="d-block w-100 h-100" style="object-fit: cover;" alt="DJI RS 3 Pro Gimbal">
+                                    <div class="position-absolute top-0 start-0 m-3 d-flex flex-column gap-2">
+                                        <span class="badge bg-primary px-3 py-2 rounded-pill fw-bold shadow">
+                                            <i class="bi bi-award-fill me-1"></i> Filmmaker Favorite
+                                        </span>
+                                        <span class="badge bg-dark bg-opacity-75 text-info px-3 py-1 rounded-pill small">
+                                            3-Axis Carbon Stabilizer
+                                        </span>
+                                    </div>
+                                    <div class="position-absolute bottom-0 start-0 end-0 p-4 text-white" 
+                                         style="background: linear-gradient(180deg, transparent 0%, rgba(9, 13, 22, 0.95) 100%);">
+                                        <div class="d-flex justify-content-between align-items-end">
+                                            <div>
+                                                <h4 class="fw-bold mb-1">DJI RS 3 Pro Gimbal</h4>
+                                                <div class="small text-white-50">4.5kg Payload &bull; Automated Axis Locks &bull; LiDAR Ready</div>
+                                            </div>
+                                            <div class="text-end">
+                                                <span class="text-white-50 text-decoration-line-through small d-block">$65.00</span>
+                                                <span class="fs-4 fw-extrabold text-warning">$50.00<span class="fs-6 text-white-50">/day</span></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <p class="text-white-50 small mb-4">
-                            All camera bodies, cinema lenses, and wireless audio setups are thoroughly bench-tested and prepped before every single pickup.
-                        </p>
-                        <div class="row g-2 text-center">
-                            <div class="col-4">
-                                <div class="p-2 rounded-3 bg-white bg-opacity-5 border border-white border-opacity-10">
-                                    <div class="fs-4 fw-bold text-warning">15 Days</div>
-                                    <span class="text-white-50 small" style="font-size: 0.75rem;">Max Duration</span>
-                                </div>
-                            </div>
-                            <div class="col-4">
-                                <div class="p-2 rounded-3 bg-white bg-opacity-5 border border-white border-opacity-10">
-                                    <div class="fs-4 fw-bold text-warning">Live</div>
-                                    <span class="text-white-50 small" style="font-size: 0.75rem;">Date Checks</span>
-                                </div>
-                            </div>
-                            <div class="col-4">
-                                <div class="p-2 rounded-3 bg-white bg-opacity-5 border border-white border-opacity-10">
-                                    <div class="fs-4 fw-bold text-warning">Direct</div>
-                                    <span class="text-white-50 small" style="font-size: 0.75rem;">Staff Support</span>
-                                </div>
-                            </div>
-                        </div>
+
+                        <!-- Carousel Controls -->
+                        <button class="carousel-control-prev" type="button" data-bs-target="#dynamicGearCarousel" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon rounded-circle p-2 bg-dark bg-opacity-50" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#dynamicGearCarousel" data-bs-slide="next">
+                            <span class="carousel-control-next-icon rounded-circle p-2 bg-dark bg-opacity-50" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
                     </div>
                 </div>
             </div>
