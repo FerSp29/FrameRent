@@ -11,21 +11,21 @@
         </h2>
         <p class="text-muted small mb-0">Track all your equipment bookings, pickup dates, return statuses, and invoices.</p>
     </div>
-    <a asp-controller="Catalog" asp-action="Index" class="btn btn-warning fw-bold text-dark rounded-pill px-4 btn-sm shadow-sm">
+    <a asp-controller="Catalog" asp-action="Index" class="btn btn-warning fw-bold text-dark rounded-pill px-4 btn-sm shadow-sm page-link-trigger">
         <i class="bi bi-plus-lg me-1"></i> New Rental
     </a>
 </div>
 
 @if (!Model.Any())
 {
-    <div class="card border-0 shadow-sm p-5 text-center rounded-4">
-        <div class="p-4 rounded-circle bg-light d-inline-flex mx-auto mb-3" style="width: 80px; height: 80px; align-items: center; justify-content: center;">
+    <div class="card border-0 shadow-sm p-5 text-center rounded-4 gear-card">
+        <div class="p-4 rounded-circle bg-body-tertiary d-inline-flex mx-auto mb-3" style="width: 80px; height: 80px; align-items: center; justify-content: center;">
             <i class="bi bi-bag-x fs-1 text-muted"></i>
         </div>
-        <h4 class="fw-bold text-dark">No Rentals Booked Yet</h4>
+        <h4 class="fw-bold">No Rentals Booked Yet</h4>
         <p class="text-muted small mb-4">Explore our inventory of cameras, lenses, lights, and accessories for your next production.</p>
         <div>
-            <a asp-controller="Catalog" asp-action="Index" class="btn btn-dark rounded-pill px-4 fw-semibold">
+            <a asp-controller="Catalog" asp-action="Index" class="btn btn-dark rounded-pill px-4 fw-semibold page-link-trigger">
                 Browse Gear Fleet
             </a>
         </div>
@@ -33,7 +33,7 @@
 }
 else
 {
-    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden gear-card">
         <div class="table-responsive">
             <table class="table table-hover align-middle mb-0">
                 <thead class="table-dark">
@@ -69,19 +69,19 @@ else
                                 <div class="d-flex align-items-center gap-3">
                                     <img src="@gearImg" alt="@rental.EquipmentName" class="rounded-3 shadow-sm" style="width: 55px; height: 55px; object-fit: cover;" />
                                     <div>
-                                        <div class="fw-bold text-dark">@rental.EquipmentName</div>
+                                        <div class="fw-bold">@rental.EquipmentName</div>
                                         <div class="small text-muted">@rental.EquipmentCategory &bull; $@rental.DailyRate.ToString("F2")/day</div>
                                     </div>
                                 </div>
                             </td>
                             <td>
-                                <div class="fw-semibold text-dark">@rental.StartDate.ToString("yyyy-MM-dd") &rarr; @rental.EndDate.ToString("yyyy-MM-dd")</div>
+                                <div class="fw-semibold">@rental.StartDate.ToString("yyyy-MM-dd") &rarr; @rental.EndDate.ToString("yyyy-MM-dd")</div>
                                 <div class="small text-muted"><i class="bi bi-clock me-1"></i>@rental.TotalDays day(s)</div>
                             </td>
                             <td>
-                                <span class="badge bg-light text-dark border px-2 py-1">@rental.Quantity unit(s)</span>
+                                <span class="badge bg-body-tertiary text-body border px-2 py-1">@rental.Quantity unit(s)</span>
                             </td>
-                            <td class="fw-bold text-dark fs-6">$@rental.TotalCost.ToString("F2")</td>
+                            <td class="fw-bold fs-6">$@rental.TotalCost.ToString("F2")</td>
                             <td>
                                 @if (rental.LateFee > 0)
                                 {
@@ -102,12 +102,42 @@ else
                             <td class="text-end pe-4">
                                 @if (canCancel)
                                 {
-                                    <form asp-action="Cancel" asp-route-id="@rental.Id" method="post" class="d-inline"
-                                          onsubmit="return confirm('Are you sure you want to cancel this rental reservation?');">
-                                        <button type="submit" class="btn btn-outline-danger btn-sm rounded-pill px-3 fw-semibold">
-                                            <i class="bi bi-x-circle me-1"></i> Cancel
-                                        </button>
-                                    </form>
+                                    <!-- Beautiful in-app custom modal trigger (No native browser window.confirm popup) -->
+                                    <button type="button" class="btn btn-outline-danger btn-sm rounded-pill px-3 fw-semibold"
+                                            data-bs-toggle="modal" data-bs-target="#cancelModal-@rental.Id">
+                                        <i class="bi bi-x-circle me-1"></i> Cancel
+                                    </button>
+
+                                    <!-- Elegant Modal Confirmation Box -->
+                                    <div class="modal fade" id="cancelModal-@rental.Id" tabindex="-1" aria-labelledby="cancelModalLabel-@rental.Id" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content rounded-4 border-0 shadow-lg p-3">
+                                                <div class="modal-header border-0 pb-0">
+                                                    <div class="p-2 rounded-circle bg-danger bg-opacity-10 text-danger me-2">
+                                                        <i class="bi bi-exclamation-triangle-fill fs-5"></i>
+                                                    </div>
+                                                    <h5 class="modal-title fw-bold" id="cancelModalLabel-@rental.Id">Cancel Reservation?</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body text-start py-3 text-muted small">
+                                                    Are you sure you want to cancel the reservation for <strong class="text-body">@rental.EquipmentName</strong>?
+                                                    <div class="mt-2 p-2 rounded-3 bg-body-tertiary border">
+                                                        <div>Duration: <strong>@rental.StartDate.ToString("yyyy-MM-dd")</strong> to <strong>@rental.EndDate.ToString("yyyy-MM-dd")</strong></div>
+                                                        <div>Refund amount: <strong>$@rental.TotalCost.ToString("F2")</strong></div>
+                                                    </div>
+                                                    <div class="mt-2 text-danger">This action cannot be undone.</div>
+                                                </div>
+                                                <div class="modal-footer border-0 pt-0 d-flex gap-2">
+                                                    <button type="button" class="btn btn-outline-secondary rounded-pill px-4 btn-sm" data-bs-dismiss="modal">Keep Booking</button>
+                                                    <form asp-action="Cancel" asp-route-id="@rental.Id" method="post" class="d-inline">
+                                                        <button type="submit" class="btn btn-danger rounded-pill px-4 btn-sm fw-bold">
+                                                            Yes, Cancel Rental
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 }
                                 else
                                 {

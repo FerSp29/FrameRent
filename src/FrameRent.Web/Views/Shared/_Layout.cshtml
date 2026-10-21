@@ -417,11 +417,11 @@
         document.addEventListener('DOMContentLoaded', () => {
             const loader = document.getElementById('page-loader-overlay');
 
-            // Quick smooth dismiss on initial page ready
-            if (loader && loader.classList.contains('active')) {
+            // Quick smooth dismiss on initial page load / render
+            if (loader) {
                 setTimeout(() => {
                     loader.classList.remove('active');
-                }, 180);
+                }, 140);
             }
 
             const showLoader = () => {
@@ -434,8 +434,13 @@
                 }
             };
 
-            // Trigger loader on links (catalog, details, checkout, auth, rentals)
-            document.querySelectorAll('a[href]:not([href^="#"]):not([target="_blank"])').forEach(link => {
+            // Trigger loader on page reload or unload
+            window.addEventListener('beforeunload', () => {
+                showLoader();
+            });
+
+            // Trigger loader on internal link navigation (catalog, details, checkout, auth, rentals)
+            document.querySelectorAll('a[href]:not([href^="#"]):not([href^="javascript"]):not([target="_blank"])').forEach(link => {
                 link.addEventListener('click', (e) => {
                     if (!e.ctrlKey && !e.shiftKey && !e.metaKey && !e.defaultPrevented) {
                         showLoader();
@@ -443,14 +448,14 @@
                 });
             });
 
-            // Trigger loader on forms submission (booking checkout, filter dates, login, register, cancel)
+            // Trigger loader on forms submission (login, register, checkout booking, cancel, filters)
             document.querySelectorAll('form').forEach(form => {
                 form.addEventListener('submit', () => {
                     showLoader();
                 });
             });
 
-            // Hide loader if back/forward button used from bfcache
+            // Hide loader if back/forward button used from cache
             window.addEventListener('pageshow', (event) => {
                 if (loader) {
                     loader.classList.remove('active');
