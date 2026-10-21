@@ -54,6 +54,27 @@ public static class DbInitializer
                 }
             }
 
+            // 2.1 Seed Default Demo Customer User
+            const string defaultCustomerEmail = "cliente@framerent.com";
+            const string defaultCustomerPassword = "Cliente123!";
+            var customerUser = await userManager.FindByEmailAsync(defaultCustomerEmail);
+            if (customerUser == null)
+            {
+                customerUser = new IdentityUser
+                {
+                    UserName = defaultCustomerEmail,
+                    Email = defaultCustomerEmail,
+                    EmailConfirmed = true
+                };
+
+                var createCustResult = await userManager.CreateAsync(customerUser, defaultCustomerPassword);
+                if (createCustResult.Succeeded)
+                {
+                    await userManager.AddToRoleAsync(customerUser, Roles.Customer);
+                    logger.LogInformation("Default Customer account seeded: {Email}", defaultCustomerEmail);
+                }
+            }
+
             // 3. Seed Initial Equipment Catalog if empty
             if (!await context.Equipments.AnyAsync())
             {
