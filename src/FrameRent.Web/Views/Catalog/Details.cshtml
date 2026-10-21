@@ -6,166 +6,273 @@
     var gearImg = EquipmentImageHelper.GetImageUrl(Model.Equipment.Category, Model.Equipment.Name);
 }
 
-<div class="mb-4">
-    <a asp-action="Index" class="btn btn-outline-secondary btn-sm rounded-pill px-3">
-        <i class="bi bi-arrow-left me-1"></i> Back to Catalog
-    </a>
-</div>
+<div class="container-fluid px-4 px-lg-5 py-3">
+    <div class="mb-4">
+        <a asp-action="Index" class="btn btn-outline-secondary btn-sm rounded-pill px-3 page-link-trigger">
+            <i class="bi bi-arrow-left me-1"></i> Back to Catalog
+        </a>
+    </div>
 
-<div class="row g-4">
-    <!-- Equipment Details & Live Availability -->
-    <div class="col-lg-7">
-        <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4">
-            <div style="height: 320px; overflow: hidden; background: #0f172a; position: relative;">
-                <img src="@gearImg" alt="@Model.Equipment.Name" style="width: 100%; height: 100%; object-fit: cover;" />
-                <span class="badge bg-dark bg-opacity-75 backdrop-blur position-absolute top-0 start-0 m-3 px-3 py-2 rounded-pill text-white fw-bold">
-                    <i class="bi bi-tag-fill me-1 text-warning"></i> @Model.Equipment.Category
-                </span>
-                <span class="badge bg-success position-absolute top-0 end-0 m-3 px-3 py-2 rounded-pill text-white fw-bold">
-                    <i class="bi bi-check-circle-fill me-1"></i> Active in Fleet
-                </span>
-            </div>
-
-            <div class="p-4">
-                <h2 class="fw-bold mb-3 text-dark">@Model.Equipment.Name</h2>
-                <p class="text-secondary leading-relaxed">@Model.Equipment.Description</p>
-
-                <div class="row g-3 my-2">
-                    <div class="col-sm-6">
-                        <div class="p-3 bg-light rounded-3 border">
-                            <div class="text-muted small fw-semibold">Daily Rental Rate</div>
-                            <div class="fs-3 fw-bold text-dark">$@Model.Equipment.DailyRate.ToString("F2") <span class="fs-6 fw-normal text-muted">/ day</span></div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="p-3 bg-light rounded-3 border">
-                            <div class="text-muted small fw-semibold">Total Stock Owned</div>
-                            <div class="fs-3 fw-bold text-dark">@Model.Equipment.TotalStock <span class="fs-6 fw-normal text-muted">units</span></div>
-                        </div>
-                    </div>
+    <div class="row g-4">
+        <!-- Equipment Details & Live Availability -->
+        <div class="col-lg-7">
+            <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4 gear-card">
+                <div style="height: 340px; overflow: hidden; background: #070a12; position: relative;">
+                    <img src="@gearImg" alt="@Model.Equipment.Name" style="width: 100%; height: 100%; object-fit: cover;" />
+                    <span class="badge bg-dark bg-opacity-75 backdrop-blur position-absolute top-0 start-0 m-3 px-3 py-2 rounded-pill text-white fw-bold">
+                        <i class="bi bi-tag-fill me-1 text-warning"></i> @Model.Equipment.Category
+                    </span>
+                    <span class="badge bg-success position-absolute top-0 end-0 m-3 px-3 py-2 rounded-pill text-white fw-bold">
+                        <i class="bi bi-check-circle-fill me-1"></i> Certified & Active
+                    </span>
                 </div>
 
-                <hr class="my-4" />
+                <div class="p-4 p-md-5">
+                    <h2 class="fw-bold mb-3">@Model.Equipment.Name</h2>
+                    <p class="text-secondary leading-relaxed">@Model.Equipment.Description</p>
 
-                <!-- Check Availability Section -->
-                <h5 class="fw-bold mb-3 d-flex align-items-center gap-2">
-                    <i class="bi bi-calendar-range-fill text-warning"></i> Check Date-Range Availability
-                </h5>
-                <form asp-action="Details" method="get" class="row g-2 align-items-end">
-                    <input type="hidden" name="id" value="@Model.Equipment.Id" />
-                    <div class="col-sm-5">
-                        <label class="form-label small fw-semibold text-muted">Start Date (From)</label>
-                        <input type="date" name="from" value="@Model.CheckFrom.ToString("yyyy-MM-dd")" class="form-control rounded-3" required />
-                    </div>
-                    <div class="col-sm-5">
-                        <label class="form-label small fw-semibold text-muted">End Date (To)</label>
-                        <input type="date" name="to" value="@Model.CheckTo.ToString("yyyy-MM-dd")" class="form-control rounded-3" required />
-                    </div>
-                    <div class="col-sm-2">
-                        <button type="submit" class="btn btn-dark w-100 rounded-3 fw-semibold">
-                            Check
-                        </button>
-                    </div>
-                </form>
-
-                @if (Model.Availability != null)
-                {
-                    <div class="mt-4 p-3 rounded-3 @(Model.Availability.AvailableUnits > 0 ? "bg-success-subtle border border-success border-opacity-25" : "bg-danger-subtle border border-danger border-opacity-25")">
-                        <div class="d-flex flex-wrap justify-content-between align-items-center gap-2">
-                            <div>
-                                <h6 class="fw-bold mb-1 text-dark">
-                                    Availability: @Model.Availability.From.ToString("yyyy-MM-dd") to @Model.Availability.To.ToString("yyyy-MM-dd") (@days days)
-                                </h6>
-                                <p class="mb-0 small text-muted">
-                                    Already booked units: <strong>@Model.Availability.ReservedUnits</strong> &bull; Total fleet: <strong>@Model.Availability.TotalStock</strong>
-                                </p>
+                    <div class="row g-3 my-2">
+                        <div class="col-sm-6">
+                            <div class="p-3 rounded-3 border bg-body-tertiary">
+                                <div class="text-muted small fw-semibold">Daily Rental Rate</div>
+                                <div class="fs-3 fw-bold text-warning">$@Model.Equipment.DailyRate.ToString("F2") <span class="fs-6 fw-normal text-muted">/ day</span></div>
                             </div>
-                            <span class="fs-4 fw-bold @(Model.Availability.AvailableUnits > 0 ? "text-success" : "text-danger")">
-                                @Model.Availability.AvailableUnits Units Free
-                            </span>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="p-3 rounded-3 border bg-body-tertiary">
+                                <div class="text-muted small fw-semibold">Total Fleet Stock</div>
+                                <div class="fs-3 fw-bold">@Model.Equipment.TotalStock <span class="fs-6 fw-normal text-muted">units</span></div>
+                            </div>
                         </div>
                     </div>
+
+                    <hr class="my-4 opacity-25" />
+
+                    <!-- Check Availability Section -->
+                    <h5 class="fw-bold mb-3 d-flex align-items-center gap-2">
+                        <i class="bi bi-calendar-range-fill text-warning"></i> Check Date-Range Availability
+                    </h5>
+                    <form asp-action="Details" method="get" class="row g-2 align-items-end" id="checkAvailForm">
+                        <input type="hidden" name="id" value="@Model.Equipment.Id" />
+                        <div class="col-sm-5">
+                            <label class="form-label small fw-semibold text-muted">Start Date (From)</label>
+                            <input type="date" name="from" id="checkFromInput" value="@Model.CheckFrom.ToString("yyyy-MM-dd")" class="form-control rounded-3" required />
+                        </div>
+                        <div class="col-sm-5">
+                            <label class="form-label small fw-semibold text-muted">End Date (To)</label>
+                            <input type="date" name="to" id="checkToInput" value="@Model.CheckTo.ToString("yyyy-MM-dd")" class="form-control rounded-3" required />
+                        </div>
+                        <div class="col-sm-2">
+                            <button type="submit" class="btn btn-warning w-100 rounded-3 fw-bold text-dark">
+                                Check
+                            </button>
+                        </div>
+                    </form>
+
+                    @if (Model.Availability != null)
+                    {
+                        <div class="mt-4 p-3 rounded-3 @(Model.Availability.AvailableUnits > 0 ? "bg-success-subtle border border-success border-opacity-25" : "bg-danger-subtle border border-danger border-opacity-25")">
+                            <div class="d-flex flex-wrap justify-content-between align-items-center gap-2">
+                                <div>
+                                    <h6 class="fw-bold mb-1">
+                                        Availability: @Model.Availability.From.ToString("yyyy-MM-dd") to @Model.Availability.To.ToString("yyyy-MM-dd") (@days days)
+                                    </h6>
+                                    <p class="mb-0 small text-muted">
+                                        Already reserved: <strong>@Model.Availability.ReservedUnits units</strong> &bull; Total stock: <strong>@Model.Availability.TotalStock</strong>
+                                    </p>
+                                </div>
+                                <span class="fs-4 fw-bold @(Model.Availability.AvailableUnits > 0 ? "text-success" : "text-danger")">
+                                    @Model.Availability.AvailableUnits Units Available
+                                </span>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Realistic Checkout & Payment Simulation Gateway -->
+        <div class="col-lg-5">
+            <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 sticky-top gear-card" style="top: 95px;">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4 class="fw-bold mb-0 d-flex align-items-center gap-2">
+                        <i class="bi bi-credit-card-2-front-fill text-warning"></i> Checkout Gateway
+                    </h4>
+                    <span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1 rounded-pill small">
+                        <i class="bi bi-lock-fill"></i> 256-Bit SSL
+                    </span>
+                </div>
+
+                @if (User.Identity?.IsAuthenticated != true)
+                {
+                    <div class="p-4 rounded-3 text-center bg-body-tertiary border my-2">
+                        <i class="bi bi-person-lock display-5 text-warning mb-2 d-block"></i>
+                        <h6 class="fw-bold">Sign In to Reserve Gear</h6>
+                        <p class="text-muted small mb-3">Please sign in or register to submit reservations and verify booking details.</p>
+                        <div class="d-flex justify-content-center gap-2">
+                            <a asp-controller="Account" asp-action="Login" class="btn btn-outline-secondary btn-sm rounded-pill px-3 page-link-trigger">Sign In</a>
+                            <a asp-controller="Account" asp-action="Register" class="btn btn-warning btn-sm fw-bold rounded-pill px-3 text-dark page-link-trigger">Create Account</a>
+                        </div>
+                    </div>
+                }
+                else if (!User.IsInRole(Roles.Customer))
+                {
+                    <div class="alert alert-warning border-0 rounded-3">
+                        <i class="bi bi-info-circle me-1"></i> You are logged in as <strong>Staff</strong>. Customer rental reservations must be submitted by Customer accounts.
+                    </div>
+                }
+                else
+                {
+                    <form asp-controller="Rentals" asp-action="Create" method="post" id="rentalCheckoutForm">
+                        <input type="hidden" name="equipmentId" value="@Model.Equipment.Id" />
+                        <input type="hidden" id="dailyRateHidden" value="@Model.Equipment.DailyRate" />
+
+                        <!-- Step 1: Dates & Units Selection -->
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold text-muted">Start Date</label>
+                            <input type="date" name="startDate" id="bookingStartDate" value="@Model.CheckFrom.ToString("yyyy-MM-dd")"
+                                   min="@DateOnly.FromDateTime(DateTime.UtcNow).ToString("yyyy-MM-dd")"
+                                   class="form-control rounded-3" required />
+                            <div class="form-text small">Cannot be in the past.</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold text-muted">End Date</label>
+                            <input type="date" name="endDate" id="bookingEndDate" value="@Model.CheckTo.ToString("yyyy-MM-dd")"
+                                   class="form-control rounded-3" required />
+                            <div class="form-text small">Maximum duration: 15 days.</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold text-muted">Quantity (Units)</label>
+                            <input type="number" name="quantity" id="bookingQuantity" value="1" min="1"
+                                   max="@(Model.Availability?.AvailableUnits > 0 ? Model.Availability.AvailableUnits : Model.Equipment.TotalStock)"
+                                   class="form-control rounded-3" required />
+                        </div>
+
+                        <!-- Step 2: Realistic Payment Method Simulation -->
+                        <div class="mb-3 pt-2">
+                            <label class="form-label small fw-bold text-muted text-uppercase tracking-wider">Payment Method Verification</label>
+                            <div class="row g-2 mb-3">
+                                <div class="col-6">
+                                    <input type="radio" class="btn-check" name="paymentOption" id="payCard" autocomplete="off" checked>
+                                    <label class="btn btn-outline-secondary w-100 rounded-3 text-start small py-2 d-flex align-items-center gap-2" for="payCard">
+                                        <i class="bi bi-credit-card text-warning fs-5"></i>
+                                        <div>
+                                            <div class="fw-bold">Credit Card</div>
+                                            <div class="text-muted" style="font-size: 0.7rem;">Visa/Mastercard</div>
+                                        </div>
+                                    </label>
+                                </div>
+                                <div class="col-6">
+                                    <input type="radio" class="btn-check" name="paymentOption" id="payWire" autocomplete="off">
+                                    <label class="btn btn-outline-secondary w-100 rounded-3 text-start small py-2 d-flex align-items-center gap-2" for="payWire">
+                                        <i class="bi bi-bank text-info fs-5"></i>
+                                        <div>
+                                            <div class="fw-bold">Bank Transfer</div>
+                                            <div class="text-muted" style="font-size: 0.7rem;">Direct Wire</div>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Card Mock Inputs -->
+                            <div id="cardInputsContainer" class="p-3 rounded-3 bg-body-tertiary border mb-3">
+                                <div class="mb-2">
+                                    <label class="form-label small text-muted mb-1">Card Number</label>
+                                    <div class="input-group input-group-sm">
+                                        <span class="input-group-text bg-transparent border-end-0"><i class="bi bi-credit-card-2-front"></i></span>
+                                        <input type="text" class="form-control border-start-0" placeholder="4242 &bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull; 4242" value="•••• •••• •••• 5892" />
+                                    </div>
+                                </div>
+                                <div class="row g-2">
+                                    <div class="col-6">
+                                        <label class="form-label small text-muted mb-1">Expires</label>
+                                        <input type="text" class="form-control form-control-sm" placeholder="MM/YY" value="12/28" />
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label small text-muted mb-1">CVC / CVV</label>
+                                        <input type="text" class="form-control form-control-sm" placeholder="CVC" value="882" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 3: Dynamic Price Breakdown Calculation -->
+                        <div class="p-3 rounded-3 bg-body-tertiary border mb-3 small">
+                            <div class="d-flex justify-content-between mb-1">
+                                <span class="text-muted">Rental Duration:</span>
+                                <strong id="summaryDays">@days day(s)</strong>
+                            </div>
+                            <div class="d-flex justify-content-between mb-1">
+                                <span class="text-muted">Rate per Day:</span>
+                                <span>$@Model.Equipment.DailyRate.ToString("F2")</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-1">
+                                <span class="text-muted">Quantity:</span>
+                                <strong id="summaryQty">1 unit</strong>
+                            </div>
+                            <hr class="my-2 opacity-25" />
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="fw-bold">Total Estimated Cost:</span>
+                                <span class="fs-5 fw-extrabold text-warning" id="summaryTotal">$@((days * Model.Equipment.DailyRate * 1).ToString("F2"))</span>
+                            </div>
+                            <div class="text-muted mt-2" style="font-size: 0.75rem;">
+                                <i class="bi bi-shield-check text-success me-1"></i> Cost is calculated by system rules: (Days &times; Rate &times; Quantity).
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button type="submit" class="btn btn-warning w-100 fw-bold py-3 rounded-pill text-dark shadow d-flex align-items-center justify-content-center gap-2"
+                                id="submitBookingBtn"
+                                @(Model.Availability != null && Model.Availability.AvailableUnits == 0 ? "disabled" : "")>
+                            <i class="bi bi-lock-fill"></i>
+                            <span>Confirm & Submit Reservation</span>
+                        </button>
+                    </form>
                 }
             </div>
         </div>
     </div>
-
-    <!-- Booking Form Card -->
-    <div class="col-lg-5">
-        <div class="card border-0 shadow-sm rounded-4 p-4 sticky-top" style="top: 95px;">
-            <h4 class="fw-bold mb-3 d-flex align-items-center gap-2 text-dark">
-                <i class="bi bi-bag-plus-fill text-warning"></i> Book Rental
-            </h4>
-
-            @if (User.Identity?.IsAuthenticated != true)
-            {
-                <div class="p-4 rounded-3 text-center bg-light border">
-                    <i class="bi bi-person-lock display-5 text-warning mb-2 d-block"></i>
-                    <h6 class="fw-bold text-dark">Customer Account Required</h6>
-                    <p class="text-muted small mb-3">Please sign in or register to submit equipment rental reservations.</p>
-                    <div class="d-flex justify-content-center gap-2">
-                        <a asp-controller="Account" asp-action="Login" class="btn btn-dark btn-sm rounded-pill px-3">Sign In</a>
-                        <a asp-controller="Account" asp-action="Register" class="btn btn-warning btn-sm fw-bold rounded-pill px-3 text-dark">Create Account</a>
-                    </div>
-                </div>
-            }
-            else if (!User.IsInRole(Roles.Customer))
-            {
-                <div class="alert alert-warning border-0 rounded-3">
-                    <i class="bi bi-info-circle me-1"></i> You are logged in as <strong>Staff</strong>. Customer rental reservations must be submitted by Customer accounts.
-                </div>
-            }
-            else
-            {
-                <form asp-controller="Rentals" asp-action="Create" method="post">
-                    <input type="hidden" name="equipmentId" value="@Model.Equipment.Id" />
-
-                    <div class="mb-3">
-                        <label class="form-label small fw-semibold text-muted">Start Date</label>
-                        <input type="date" name="startDate" value="@Model.CheckFrom.ToString("yyyy-MM-dd")"
-                               min="@DateOnly.FromDateTime(DateTime.UtcNow).ToString("yyyy-MM-dd")"
-                               class="form-control rounded-3" required />
-                        <div class="form-text small">Cannot be in the past.</div>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label small fw-semibold text-muted">End Date</label>
-                        <input type="date" name="endDate" value="@Model.CheckTo.ToString("yyyy-MM-dd")"
-                               class="form-control rounded-3" required />
-                        <div class="form-text small">Max rental period: 15 days.</div>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label small fw-semibold text-muted">Quantity (Units)</label>
-                        <input type="number" name="quantity" value="1" min="1"
-                               max="@(Model.Availability?.AvailableUnits > 0 ? Model.Availability.AvailableUnits : Model.Equipment.TotalStock)"
-                               class="form-control rounded-3" required />
-                    </div>
-
-                    @if (days > 0)
-                    {
-                        <div class="p-3 bg-light rounded-3 border mb-3 small">
-                            <div class="d-flex justify-content-between mb-1">
-                                <span class="text-muted">Shoot Duration:</span>
-                                <strong>@days day(s)</strong>
-                            </div>
-                            <div class="d-flex justify-content-between mb-1">
-                                <span class="text-muted">Est. Rate per unit:</span>
-                                <strong>$@estimatedCostPerUnit.ToString("F2")</strong>
-                            </div>
-                            <hr class="my-2" />
-                            <div class="text-muted" style="font-size: 0.8rem;">
-                                * Total cost is calculated server-side based on exact dates and units.
-                            </div>
-                        </div>
-                    }
-
-                    <button type="submit" class="btn btn-warning w-100 fw-bold py-3 rounded-pill text-dark shadow-sm"
-                            @(Model.Availability != null && Model.Availability.AvailableUnits == 0 ? "disabled" : "")>
-                        <i class="bi bi-send-check-fill me-1"></i> Submit Rental Reservation
-                    </button>
-                </form>
-            }
-        </div>
-    </div>
 </div>
+
+<script>
+    // Real-time calculation script for payment gateway card
+    document.addEventListener('DOMContentLoaded', () => {
+        const startInput = document.getElementById('bookingStartDate');
+        const endInput = document.getElementById('bookingEndDate');
+        const qtyInput = document.getElementById('bookingQuantity');
+        const dailyRate = parseFloat(document.getElementById('dailyRateHidden')?.value || 0);
+
+        const summaryDays = document.getElementById('summaryDays');
+        const summaryQty = document.getElementById('summaryQty');
+        const summaryTotal = document.getElementById('summaryTotal');
+
+        const calculateTotals = () => {
+            if (!startInput || !endInput || !qtyInput) return;
+
+            const sDate = new Date(startInput.value);
+            const eDate = new Date(endInput.value);
+            const qty = parseInt(qtyInput.value) || 1;
+
+            if (eDate > sDate) {
+                const diffTime = Math.abs(eDate - sDate);
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                const total = diffDays * dailyRate * qty;
+
+                if (summaryDays) summaryDays.innerText = `${diffDays} day(s)`;
+                if (summaryQty) summaryQty.innerText = `${qty} unit(s)`;
+                if (summaryTotal) summaryTotal.innerText = `$${total.toFixed(2)}`;
+            } else {
+                if (summaryDays) summaryDays.innerText = `Invalid dates`;
+                if (summaryTotal) summaryTotal.innerText = `$0.00`;
+            }
+        };
+
+        if (startInput && endInput && qtyInput) {
+            startInput.addEventListener('change', calculateTotals);
+            endInput.addEventListener('change', calculateTotals);
+            qtyInput.addEventListener('input', calculateTotals);
+        }
+    });
+</script>
