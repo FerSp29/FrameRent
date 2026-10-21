@@ -8,36 +8,72 @@
 
 @if (!isAuthenticated)
 {
-    <!-- ========================================== -->
-    <!-- 1. LANDING PAGE FOR GUEST / PUBLIC VISITOR -->
-    <!-- ========================================== -->
-    <div class="p-5 mb-5 rounded-4 text-white shadow-lg position-relative overflow-hidden" 
-         style="background: linear-gradient(135deg, #090d16 0%, #1e1b4b 60%, #311042 100%); border: 1px solid rgba(255, 255, 255, 0.1);">
-        <div class="row align-items-center position-relative" style="z-index: 2;">
-            <div class="col-lg-8">
-                <span class="badge bg-warning text-dark fw-bold px-3 py-2 rounded-pill mb-3">
-                    <i class="bi bi-stars me-1"></i> Cinema Gear for Creators & Studios
-                </span>
-                <h1 class="display-4 fw-extrabold tracking-tight mb-3">
-                    Rent Cinema-Grade Audiovisual Gear, <span class="text-warning">Friction-Free.</span>
-                </h1>
-                <p class="lead text-white-50 mb-4 pe-lg-5">
-                    Stop managing shoots through messy spreadsheets and WhatsApp messages. Check live fleet availability by dates, reserve guaranteed units, and power your production with top-tier gear.
-                </p>
-                <div class="d-flex flex-wrap gap-3">
-                    <a href="#catalog-section" class="btn btn-warning btn-lg fw-bold rounded-pill px-4 text-dark shadow">
-                        <i class="bi bi-camera-reels-fill me-2"></i> Explore Fleet
-                    </a>
-                    <a asp-controller="Account" asp-action="Register" class="btn btn-outline-light btn-lg rounded-pill px-4">
-                        <i class="bi bi-person-plus me-2"></i> Create Free Account
-                    </a>
+    <!-- ======================================================================= -->
+    <!-- 1. FULL-WIDTH EDGE-TO-EDGE HERO LANDING PAGE (FOR GUEST / PUBLIC)       -->
+    <!-- ======================================================================= -->
+    <div class="w-100 py-5 py-lg-6 position-relative overflow-hidden mb-5 shadow-lg" 
+         style="background: linear-gradient(135deg, #070a12 0%, #151b2e 50%, #2a113a 100%); border-bottom: 1px solid rgba(255, 255, 255, 0.08);">
+        <!-- Subtle Ambient Glow -->
+        <div class="position-absolute top-0 end-0 translate-middle-y" style="width: 500px; height: 500px; background: radial-gradient(circle, rgba(245,158,11,0.18) 0%, transparent 70%); filter: blur(60px); pointer-events: none;"></div>
+
+        <div class="container-fluid px-4 px-lg-5 position-relative" style="z-index: 2;">
+            <div class="row align-items-center g-5">
+                <div class="col-lg-7 text-white">
+                    <span class="badge bg-warning text-dark fw-bold px-3 py-2 rounded-pill mb-3 shadow-sm d-inline-flex align-items-center gap-1">
+                        <i class="bi bi-stars"></i> Cinema Gear Fleet for Creators & Studios
+                    </span>
+                    <h1 class="display-3 fw-bolder tracking-tight mb-4 text-white">
+                        Rent Cinema-Grade Audiovisual Gear, <span class="text-warning">Friction-Free.</span>
+                    </h1>
+                    <p class="lead text-white-50 mb-5 pe-lg-5 fs-5">
+                        Say goodbye to broken spreadsheets and WhatsApp chat chaos. Verify live fleet inventory by dates, lock in guaranteed units, and power your production with industry-standard cameras, lighting, and audio.
+                    </p>
+                    <div class="d-flex flex-wrap gap-3">
+                        <a href="#catalog-section" class="btn btn-warning btn-lg fw-bold rounded-pill px-4 text-dark shadow d-inline-flex align-items-center gap-2">
+                            <i class="bi bi-camera-reels-fill"></i> Explore Available Fleet
+                        </a>
+                        <a asp-controller="Account" asp-action="Register" class="btn btn-outline-light btn-lg rounded-pill px-4 page-link-trigger d-inline-flex align-items-center gap-2">
+                            <i class="bi bi-person-plus-fill"></i> Create Free Account
+                        </a>
+                    </div>
                 </div>
-            </div>
-            <div class="col-lg-4 text-center d-none d-lg-block">
-                <div class="p-4 rounded-4" style="background: rgba(255,255,255,0.04); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1);">
-                    <i class="bi bi-film display-1 text-warning mb-3 d-block"></i>
-                    <h5 class="fw-bold text-white">Always Ready to Shoot</h5>
-                    <p class="text-white-50 small mb-0">Inspected, prepped, and certified cinema camera packages, lighting, audio and gimbal setups.</p>
+
+                <div class="col-lg-5">
+                    <div class="p-4 p-md-5 rounded-4 shadow-lg text-white" 
+                         style="background: rgba(255,255,255,0.05); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.12);">
+                        <div class="d-flex align-items-center gap-3 mb-3">
+                            <div class="p-3 rounded-circle bg-warning bg-opacity-20 text-warning">
+                                <i class="bi bi-shield-check fs-2"></i>
+                            </div>
+                            <div>
+                                <h5 class="fw-bold mb-0">Production-Ready Guarantee</h5>
+                                <span class="text-white-50 small">100% Calibrated & Tested</span>
+                            </div>
+                        </div>
+                        <p class="text-white-50 small mb-4">
+                            All camera bodies, cinema lenses, and wireless audio setups are thoroughly bench-tested and prepped before every single pickup.
+                        </p>
+                        <div class="row g-2 text-center">
+                            <div class="col-4">
+                                <div class="p-2 rounded-3 bg-white bg-opacity-5 border border-white border-opacity-10">
+                                    <div class="fs-4 fw-bold text-warning">15 Days</div>
+                                    <span class="text-white-50 small" style="font-size: 0.75rem;">Max Duration</span>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="p-2 rounded-3 bg-white bg-opacity-5 border border-white border-opacity-10">
+                                    <div class="fs-4 fw-bold text-warning">Live</div>
+                                    <span class="text-white-50 small" style="font-size: 0.75rem;">Date Checks</span>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="p-2 rounded-3 bg-white bg-opacity-5 border border-white border-opacity-10">
+                                    <div class="fs-4 fw-bold text-warning">Direct</div>
+                                    <span class="text-white-50 small" style="font-size: 0.75rem;">Staff Support</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -45,43 +81,46 @@
 }
 else
 {
-    <!-- ================================================= -->
-    <!-- 2. LANDING PAGE / DASHBOARD FOR LOGGED-IN CUSTOMER -->
-    <!-- ================================================= -->
-    <div class="p-4 p-md-5 mb-5 rounded-4 shadow-sm position-relative overflow-hidden" 
-         style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: #ffffff; border: 1px solid rgba(255, 255, 255, 0.08);">
-        <div class="row align-items-center">
-            <div class="col-lg-8">
-                <div class="d-flex align-items-center gap-2 mb-2">
-                    <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-1 rounded-pill fw-semibold">
-                        <i class="bi bi-shield-check me-1"></i> Active Customer Portal
-                    </span>
-                    <span class="text-white-50 small">&bull; Welcome back!</span>
-                </div>
-                <h2 class="fw-bold mb-2">Hello, @User.Identity?.Name 👋</h2>
-                <p class="text-white-50 mb-4">
-                    Ready to book equipment for your next shoot? Browse the inventory, verify date ranges, and keep track of your approved rentals in one single place.
-                </p>
-                <div class="d-flex flex-wrap gap-2">
-                    <a href="#catalog-section" class="btn btn-warning fw-bold rounded-pill px-4 text-dark">
-                        <i class="bi bi-search me-1"></i> Reserve Equipment
-                    </a>
-                    @if (User.IsInRole(Roles.Customer))
-                    {
-                        <a asp-controller="Rentals" asp-action="MyRentals" class="btn btn-outline-light rounded-pill px-4">
-                            <i class="bi bi-receipt-cutoff me-1"></i> Go to My Rentals
-                        </a>
-                    }
-                </div>
-            </div>
-            <div class="col-lg-4 mt-4 mt-lg-0">
-                <div class="bg-white bg-opacity-10 p-3 rounded-3 border border-white border-opacity-10">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <span class="text-white-50 small">Quick Status</span>
-                        <i class="bi bi-info-circle text-warning"></i>
+    <!-- ======================================================================= -->
+    <!-- 2. FULL-WIDTH EDGE-TO-EDGE CUSTOMER DASHBOARD (WHEN LOGGED IN)          -->
+    <!-- ======================================================================= -->
+    <div class="w-100 py-5 position-relative overflow-hidden mb-5 shadow-sm" 
+         style="background: linear-gradient(135deg, #090e1a 0%, #172033 60%, #1e293b 100%); border-bottom: 1px solid rgba(255, 255, 255, 0.08);">
+        <div class="container-fluid px-4 px-lg-5 position-relative" style="z-index: 2;">
+            <div class="row align-items-center g-4">
+                <div class="col-lg-8 text-white">
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                        <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-1 rounded-pill fw-semibold">
+                            <i class="bi bi-shield-check me-1"></i> Verified Customer Space
+                        </span>
+                        <span class="text-white-50 small">&bull; Ready to book</span>
                     </div>
-                    <div class="small text-white-50">
-                        Maximum <strong>3 active rentals</strong> permitted at a time. All equipment includes strict quality check before release.
+                    <h2 class="display-5 fw-bold mb-2">Welcome Back, @User.Identity?.Name 👋</h2>
+                    <p class="text-white-50 fs-5 mb-4 pe-lg-4">
+                        Plan and secure audiovisual equipment for your upcoming film, video shoot, or broadcast. Check real-time date availability below or view your active reservations.
+                    </p>
+                    <div class="d-flex flex-wrap gap-2">
+                        <a href="#catalog-section" class="btn btn-warning fw-bold rounded-pill px-4 text-dark shadow-sm">
+                            <i class="bi bi-search me-1"></i> Book Equipment
+                        </a>
+                        @if (User.IsInRole(Roles.Customer))
+                        {
+                            <a asp-controller="Rentals" asp-action="MyRentals" class="btn btn-outline-light rounded-pill px-4 page-link-trigger">
+                                <i class="bi bi-calendar-check-fill me-1 text-warning"></i> View My Rentals
+                            </a>
+                        }
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="p-4 rounded-4 shadow-sm" style="background: rgba(255,255,255,0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1);">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="fw-bold text-white small text-uppercase tracking-wider">Rental Policy Notice</span>
+                            <i class="bi bi-info-circle-fill text-warning"></i>
+                        </div>
+                        <p class="text-white-50 small mb-0">
+                            You may have up to <strong>3 active rentals</strong> (Pending/Approved) simultaneously. Automatic late fees apply if equipment is returned after the agreed end date.
+                        </p>
                     </div>
                 </div>
             </div>
@@ -89,25 +128,27 @@ else
     </div>
 }
 
-<!-- ========================================== -->
-<!-- CATALOG FILTER & GEAR FLEET GRID           -->
-<!-- ========================================== -->
-<div id="catalog-section" class="pt-2">
-    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+<!-- ======================================================================= -->
+<!-- CATALOG FILTER & GEAR FLEET GRID (IN FLUID CONTAINER)                   -->
+<!-- ======================================================================= -->
+<div id="catalog-section" class="container-fluid px-4 px-lg-5 pt-2">
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
         <div>
             <h3 class="fw-bold mb-1 d-flex align-items-center gap-2">
-                <i class="bi bi-sliders text-warning"></i> Available Gear Inventory
+                <i class="bi bi-sliders text-warning"></i> Equipment Catalog
             </h3>
-            <p class="text-muted small mb-0">Select an item to view live stock and check availability for your shoot dates.</p>
+            <p class="text-muted small mb-0">Select any camera, lens, lighting, or accessory to check units and reserve your dates.</p>
         </div>
-        <div class="d-flex gap-2 mt-3 mt-md-0 flex-wrap">
-            <a asp-action="Index" class="btn btn-sm rounded-pill px-3 @(string.IsNullOrEmpty(selectedCategory) ? "btn-dark fw-bold" : "btn-outline-secondary")">
-                All Gear
+
+        <!-- Category Filter Pills -->
+        <div class="d-flex gap-2 flex-wrap">
+            <a asp-action="Index" class="btn btn-sm rounded-pill px-3 @(string.IsNullOrEmpty(selectedCategory) ? "btn-warning text-dark fw-bold shadow-sm" : "btn-outline-secondary")">
+                All Equipment
             </a>
             @foreach (var cat in categories)
             {
                 <a asp-action="Index" asp-route-category="@cat"
-                   class="btn btn-sm rounded-pill px-3 @(string.Equals(selectedCategory, cat, StringComparison.OrdinalIgnoreCase) ? "btn-dark fw-bold" : "btn-outline-secondary")">
+                   class="btn btn-sm rounded-pill px-3 @(string.Equals(selectedCategory, cat, StringComparison.OrdinalIgnoreCase) ? "btn-warning text-dark fw-bold shadow-sm" : "btn-outline-secondary")">
                     @cat
                 </a>
             }
@@ -116,12 +157,12 @@ else
 
     @if (!Model.Any())
     {
-        <div class="card border-0 shadow-sm p-5 text-center rounded-4">
+        <div class="card border-0 shadow-sm p-5 text-center rounded-4 my-4">
             <i class="bi bi-camera-video-off display-4 text-muted mb-3"></i>
             <h5 class="fw-bold">No active gear in this category</h5>
             <p class="text-muted mb-3">Try clearing the category filter to explore other available equipment.</p>
             <div>
-                <a asp-action="Index" class="btn btn-dark btn-sm rounded-pill px-3">View All Equipment</a>
+                <a asp-action="Index" class="btn btn-dark btn-sm rounded-pill px-3 page-link-trigger">View All Equipment</a>
             </div>
         </div>
     }
@@ -132,7 +173,7 @@ else
             {
                 var gearImg = EquipmentImageHelper.GetImageUrl(item.Category, item.Name);
 
-                <div class="col-md-6 col-lg-4">
+                <div class="col-sm-6 col-lg-4 col-xl-3">
                     <div class="gear-card h-100 d-flex flex-column shadow-sm">
                         <!-- Product Image Box -->
                         <div class="gear-img-wrap">
@@ -145,24 +186,24 @@ else
                         <!-- Card Body -->
                         <div class="p-4 d-flex flex-column flex-grow-1">
                             <div class="d-flex justify-content-between align-items-center mb-2">
-                                <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill small">
-                                    <i class="bi bi-check2-circle"></i> @item.TotalStock Units in Fleet
+                                <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill small px-2 py-1">
+                                    <i class="bi bi-box-seam me-1"></i> @item.TotalStock In Fleet
                                 </span>
                             </div>
 
-                            <h5 class="fw-bold text-dark mb-2">@item.Name</h5>
-                            <p class="text-muted small mb-4 flex-grow-1" style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">
+                            <h5 class="fw-bold mb-2">@item.Name</h5>
+                            <p class="text-muted small mb-4 flex-grow-1" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
                                 @item.Description
                             </p>
 
-                            <hr class="my-3 text-muted opacity-25" />
+                            <hr class="my-3 opacity-25" />
 
                             <div class="d-flex justify-content-between align-items-center">
                                 <div>
-                                    <span class="fs-4 fw-extrabold text-dark">$@item.DailyRate.ToString("F2")</span>
+                                    <span class="fs-4 fw-extrabold text-warning">$@item.DailyRate.ToString("F2")</span>
                                     <span class="text-muted small">/day</span>
                                 </div>
-                                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-rent px-3 py-2 small shadow-sm d-flex align-items-center gap-1">
+                                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-rent px-3 py-2 small shadow-sm d-flex align-items-center gap-1 page-link-trigger">
                                     <span>Check & Rent</span>
                                     <i class="bi bi-chevron-right fs-6"></i>
                                 </a>

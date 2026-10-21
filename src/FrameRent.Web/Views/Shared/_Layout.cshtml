@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-bs-theme="dark">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -11,20 +11,62 @@
     <!-- Bootstrap & Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+    
+    <script>
+        // Set initial theme before body renders to avoid flickering
+        (function() {
+            const savedTheme = localStorage.getItem('framerent-theme') || 'dark';
+            document.documentElement.setAttribute('data-bs-theme', savedTheme);
+        })();
+    </script>
+
     <style>
         :root {
             --primary-accent: #f59e0b;
-            --primary-dark: #0f172a;
-            --surface-bg: #f8fafc;
+            --primary-accent-hover: #d97706;
+        }
+
+        /* Light Theme Palette & Background */
+        [data-bs-theme="light"] {
+            --site-bg: #f1f5f9;
+            --site-bg-pattern: radial-gradient(circle at top right, rgba(245, 158, 11, 0.08) 0%, transparent 40%),
+                               radial-gradient(circle at bottom left, rgba(59, 130, 246, 0.06) 0%, transparent 40%),
+                               #f8fafc;
+            --navbar-bg: rgba(255, 255, 255, 0.85);
+            --navbar-border: rgba(226, 232, 240, 0.8);
+            --card-surface: #ffffff;
+            --card-border: #e2e8f0;
+            --text-heading: #0f172a;
+            --text-body: #334155;
+            --footer-bg: #0f172a;
+            --footer-text: #94a3b8;
+        }
+
+        /* Dark Theme Palette & Background */
+        [data-bs-theme="dark"] {
+            --site-bg: #090d16;
+            --site-bg-pattern: radial-gradient(circle at 10% 20%, rgba(245, 158, 11, 0.07) 0%, transparent 35%),
+                               radial-gradient(circle at 90% 80%, rgba(99, 102, 241, 0.08) 0%, transparent 35%),
+                               linear-gradient(180deg, #070a12 0%, #0d1322 100%);
+            --navbar-bg: rgba(11, 17, 32, 0.85);
+            --navbar-border: rgba(255, 255, 255, 0.08);
+            --card-surface: #111827;
+            --card-border: rgba(255, 255, 255, 0.08);
+            --text-heading: #f8fafc;
+            --text-body: #cbd5e1;
+            --footer-bg: #050811;
+            --footer-text: #64748b;
         }
 
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: var(--surface-bg);
-            color: #1e293b;
+            background: var(--site-bg-pattern);
+            background-attachment: fixed;
+            color: var(--text-body);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         /* Top Progress Bar & Dynamic Loader Overlay */
@@ -34,8 +76,8 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(15, 23, 42, 0.75);
-            backdrop-filter: blur(5px);
+            background: rgba(9, 13, 22, 0.85);
+            backdrop-filter: blur(8px);
             z-index: 99999;
             display: flex;
             flex-direction: column;
@@ -67,8 +109,10 @@
 
         /* Navbar Styling */
         .navbar-custom {
-            background-color: #0b1120;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            background-color: var(--navbar-bg);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--navbar-border);
+            transition: all 0.3s ease;
         }
 
         .navbar-brand {
@@ -87,26 +131,54 @@
             color: var(--primary-accent) !important;
         }
 
+        /* Theme Toggle Button */
+        .theme-toggle-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #f8fafc;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        [data-bs-theme="light"] .theme-toggle-btn {
+            background: #e2e8f0;
+            border-color: #cbd5e1;
+            color: #0f172a;
+        }
+
+        .theme-toggle-btn:hover {
+            transform: rotate(20deg) scale(1.08);
+            background: var(--primary-accent);
+            color: #0f172a;
+            border-color: var(--primary-accent);
+        }
+
         /* Cards & Visual Polish */
         .gear-card {
-            background: #ffffff;
-            border: 1px solid #e2e8f0;
-            border-radius: 16px;
+            background: var(--card-surface);
+            border: 1px solid var(--card-border);
+            border-radius: 18px;
             overflow: hidden;
             transition: all 0.25s cubic-bezier(0.165, 0.84, 0.44, 1);
         }
 
         .gear-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(15, 23, 42, 0.08);
-            border-color: #cbd5e1;
+            box-shadow: 0 16px 32px rgba(0, 0, 0, 0.15);
+            border-color: var(--primary-accent);
         }
 
         .gear-img-wrap {
             position: relative;
-            height: 210px;
+            height: 220px;
             overflow: hidden;
-            background: #0f172a;
+            background: #0b1120;
         }
 
         .gear-img-wrap img {
@@ -125,7 +197,7 @@
             top: 14px;
             left: 14px;
             backdrop-filter: blur(8px);
-            background: rgba(15, 23, 42, 0.8);
+            background: rgba(15, 23, 42, 0.85);
             color: #f8fafc;
             font-weight: 600;
             font-size: 0.75rem;
@@ -144,15 +216,15 @@
         }
 
         .btn-rent:hover {
-            background-color: #d97706;
+            background-color: var(--primary-accent-hover);
             color: #ffffff;
             transform: translateY(-1px);
         }
 
         footer {
             margin-top: auto;
-            background-color: #0b1120;
-            color: #94a3b8;
+            background-color: var(--footer-bg);
+            color: var(--footer-text);
             border-top: 1px solid rgba(255, 255, 255, 0.05);
         }
     </style>
@@ -162,45 +234,56 @@
     <div id="page-loader-overlay">
         <div class="loader-spinner mb-3"></div>
         <div class="d-flex align-items-center gap-2 text-warning fw-bold fs-5">
-            <i class="bi bi-camera-reels"></i> FrameRent
+            <i class="bi bi-camera-reels-fill"></i> FrameRent
         </div>
         <span class="text-white-50 small mt-1">Loading experience...</span>
     </div>
 
     <!-- Main Navigation Bar -->
-    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom sticky-top py-3">
-        <div class="container">
-            <a class="navbar-brand d-flex align-items-center gap-2 text-white page-link-trigger" asp-controller="Catalog" asp-action="Index">
-                <span class="p-1 rounded-3 bg-warning text-dark d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
+    <nav class="navbar navbar-expand-lg navbar-custom sticky-top py-3">
+        <div class="container-fluid px-4 px-lg-5">
+            <a class="navbar-brand d-flex align-items-center gap-2 text-body page-link-trigger" asp-controller="Catalog" asp-action="Index">
+                <span class="p-1 rounded-3 bg-warning text-dark d-flex align-items-center justify-content-center shadow-sm" style="width: 34px; height: 34px;">
                     <i class="bi bi-camera-reels-fill fs-5"></i>
                 </span>
-                FrameRent
+                <span class="fw-bold tracking-tight">FrameRent</span>
             </a>
+
             <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
+
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto ps-lg-3">
                     <li class="nav-item">
-                        <a class="nav-link text-white-50 page-link-trigger" asp-controller="Catalog" asp-action="Index">
-                            <i class="bi bi-grid-fill me-1 text-warning"></i> Catalog
+                        <a class="nav-link page-link-trigger d-flex align-items-center gap-1" asp-controller="Catalog" asp-action="Index">
+                            <i class="bi bi-grid-fill text-warning"></i> Catalog
                         </a>
                     </li>
                     @if (User.Identity?.IsAuthenticated == true && User.IsInRole(Roles.Customer))
                     {
                         <li class="nav-item">
-                            <a class="nav-link text-white-50 page-link-trigger" asp-controller="Rentals" asp-action="MyRentals">
-                                <i class="bi bi-calendar-check-fill me-1 text-warning"></i> My Rentals
+                            <a class="nav-link page-link-trigger d-flex align-items-center gap-1" asp-controller="Rentals" asp-action="MyRentals">
+                                <i class="bi bi-calendar-check-fill text-warning"></i> My Rentals
                             </a>
                         </li>
                     }
                 </ul>
-                <ul class="navbar-nav ms-auto align-items-center gap-2">
+
+                <ul class="navbar-nav ms-auto align-items-center gap-3">
+                    <!-- Light / Dark Mode Toggle Button -->
+                    <li class="nav-item">
+                        <button type="button" class="theme-toggle-btn shadow-sm" id="themeToggleBtn" title="Toggle Light / Dark Mode">
+                            <i class="bi bi-sun-fill" id="themeIconSun" style="display: none;"></i>
+                            <i class="bi bi-moon-stars-fill" id="themeIconMoon"></i>
+                        </button>
+                    </li>
+
                     @if (User.Identity?.IsAuthenticated == true)
                     {
-                        <li class="nav-item me-2 text-light small d-flex align-items-center gap-2">
-                            <span class="text-white-50">Hello,</span>
-                            <span class="fw-bold text-white">@User.Identity.Name</span>
+                        <li class="nav-item text-body small d-flex align-items-center gap-2">
+                            <span class="text-muted">Hello,</span>
+                            <span class="fw-bold">@User.Identity.Name</span>
                             @if (User.IsInRole(Roles.Staff))
                             {
                                 <span class="badge bg-warning text-dark fw-bold">Staff</span>
@@ -212,7 +295,7 @@
                         </li>
                         <li class="nav-item">
                             <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
-                                <button type="submit" class="btn btn-outline-light btn-sm rounded-pill px-3">
+                                <button type="submit" class="btn btn-outline-secondary btn-sm rounded-pill px-3">
                                     <i class="bi bi-box-arrow-right me-1"></i> Logout
                                 </button>
                             </form>
@@ -221,12 +304,12 @@
                     else
                     {
                         <li class="nav-item">
-                            <a class="btn btn-outline-light btn-sm rounded-pill px-3 page-link-trigger" asp-controller="Account" asp-action="Login">
+                            <a class="btn btn-outline-secondary btn-sm rounded-pill px-3 page-link-trigger" asp-controller="Account" asp-action="Login">
                                 Sign In
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="btn btn-warning btn-sm fw-bold rounded-pill px-3 page-link-trigger text-dark" asp-controller="Account" asp-action="Register">
+                            <a class="btn btn-warning btn-sm fw-bold rounded-pill px-3 page-link-trigger text-dark shadow-sm" asp-controller="Account" asp-action="Register">
                                 <i class="bi bi-person-plus-fill me-1"></i> Register
                             </a>
                         </li>
@@ -236,9 +319,9 @@
         </div>
     </nav>
 
-    <!-- Main Body Container -->
-    <main class="py-4 flex-grow-1">
-        <div class="container">
+    <!-- Main Content Flow (Landing pages stretch full width, Catalog & Details stay responsive) -->
+    <main class="flex-grow-1">
+        <div class="container-fluid px-4 px-lg-5 pt-3">
             @if (TempData["SuccessMessage"] != null)
             {
                 <div class="alert alert-success alert-dismissible fade show border-0 shadow-sm rounded-3 d-flex align-items-center gap-2 mb-4" role="alert">
@@ -255,20 +338,20 @@
                     <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert"></button>
                 </div>
             }
-
-            @RenderBody()
         </div>
+
+        @RenderBody()
     </main>
 
     <!-- Footer -->
-    <footer class="py-4">
-        <div class="container d-flex flex-wrap justify-content-between align-items-center text-sm">
+    <footer class="py-4 mt-5">
+        <div class="container-fluid px-4 px-lg-5 d-flex flex-wrap justify-content-between align-items-center text-sm">
             <div class="d-flex align-items-center gap-2">
-                <i class="bi bi-camera-reels-fill text-warning"></i>
-                <span class="text-white fw-bold">FrameRent</span>
-                <span class="text-muted ms-2">&mdash; Professional Audiovisual Equipment Rental Platform</span>
+                <i class="bi bi-camera-reels-fill text-warning fs-5"></i>
+                <span class="fw-bold text-white">FrameRent</span>
+                <span class="text-white-50 ms-2 d-none d-md-inline">&mdash; Professional Audiovisual Equipment Rental Platform</span>
             </div>
-            <div class="text-muted small mt-2 mt-md-0">
+            <div class="small mt-2 mt-md-0 text-white-50">
                 Crafted for Filmmakers, Creators & Producers &bull; @DateTime.UtcNow.Year
             </div>
         </div>
@@ -277,6 +360,36 @@
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        // Light / Dark Mode Toggle Logic
+        (function() {
+            const toggleBtn = document.getElementById('themeToggleBtn');
+            const sunIcon = document.getElementById('themeIconSun');
+            const moonIcon = document.getElementById('themeIconMoon');
+
+            const updateIcons = (theme) => {
+                if (theme === 'light') {
+                    sunIcon.style.display = 'none';
+                    moonIcon.style.display = 'inline-block';
+                } else {
+                    sunIcon.style.display = 'inline-block';
+                    moonIcon.style.display = 'none';
+                }
+            };
+
+            const currentTheme = document.documentElement.getAttribute('data-bs-theme') || 'dark';
+            updateIcons(currentTheme);
+
+            if (toggleBtn) {
+                toggleBtn.addEventListener('click', () => {
+                    const activeTheme = document.documentElement.getAttribute('data-bs-theme');
+                    const newTheme = activeTheme === 'dark' ? 'light' : 'dark';
+                    document.documentElement.setAttribute('data-bs-theme', newTheme);
+                    localStorage.setItem('framerent-theme', newTheme);
+                    updateIcons(newTheme);
+                });
+            }
+        })();
+
         // Dynamic loading icon when navigating between sections/pages or submitting forms
         document.addEventListener('DOMContentLoaded', () => {
             const loader = document.getElementById('page-loader-overlay');
