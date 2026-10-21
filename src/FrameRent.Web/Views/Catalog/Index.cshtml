@@ -1,66 +1,176 @@
 @model IEnumerable<EquipmentResponseDto>
 @{
-    ViewData["Title"] = "Equipment Catalog";
+    ViewData["Title"] = "Equipment Catalog & Gear Fleet";
     var categories = ViewBag.Categories as List<string> ?? new List<string>();
     var selectedCategory = ViewBag.SelectedCategory as string;
+    bool isAuthenticated = User.Identity?.IsAuthenticated == true;
 }
 
-<div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
-    <div>
-        <h1 class="h3 fw-bold mb-1">Audiovisual Equipment Catalog</h1>
-        <p class="text-muted mb-0">Explore cameras, lenses, lighting, audio, and stabilizers ready for your production.</p>
-    </div>
-    <div class="d-flex gap-2 mt-3 mt-md-0 flex-wrap">
-        <a asp-action="Index" class="btn btn-sm @(string.IsNullOrEmpty(selectedCategory) ? "btn-dark" : "btn-outline-secondary")">
-            All Categories
-        </a>
-        @foreach (var cat in categories)
-        {
-            <a asp-action="Index" asp-route-category="@cat"
-               class="btn btn-sm @(string.Equals(selectedCategory, cat, StringComparison.OrdinalIgnoreCase) ? "btn-dark" : "btn-outline-secondary")">
-                @cat
-            </a>
-        }
-    </div>
-</div>
-
-@if (!Model.Any())
+@if (!isAuthenticated)
 {
-    <div class="card border-0 shadow-sm p-5 text-center">
-        <i class="bi bi-camera-video-off display-4 text-muted mb-3"></i>
-        <h5>No active equipment found</h5>
-        <p class="text-muted mb-0">Please check back later or clear the category filter.</p>
+    <!-- ========================================== -->
+    <!-- 1. LANDING PAGE FOR GUEST / PUBLIC VISITOR -->
+    <!-- ========================================== -->
+    <div class="p-5 mb-5 rounded-4 text-white shadow-lg position-relative overflow-hidden" 
+         style="background: linear-gradient(135deg, #090d16 0%, #1e1b4b 60%, #311042 100%); border: 1px solid rgba(255, 255, 255, 0.1);">
+        <div class="row align-items-center position-relative" style="z-index: 2;">
+            <div class="col-lg-8">
+                <span class="badge bg-warning text-dark fw-bold px-3 py-2 rounded-pill mb-3">
+                    <i class="bi bi-stars me-1"></i> Cinema Gear for Creators & Studios
+                </span>
+                <h1 class="display-4 fw-extrabold tracking-tight mb-3">
+                    Rent Cinema-Grade Audiovisual Gear, <span class="text-warning">Friction-Free.</span>
+                </h1>
+                <p class="lead text-white-50 mb-4 pe-lg-5">
+                    Stop managing shoots through messy spreadsheets and WhatsApp messages. Check live fleet availability by dates, reserve guaranteed units, and power your production with top-tier gear.
+                </p>
+                <div class="d-flex flex-wrap gap-3">
+                    <a href="#catalog-section" class="btn btn-warning btn-lg fw-bold rounded-pill px-4 text-dark shadow">
+                        <i class="bi bi-camera-reels-fill me-2"></i> Explore Fleet
+                    </a>
+                    <a asp-controller="Account" asp-action="Register" class="btn btn-outline-light btn-lg rounded-pill px-4">
+                        <i class="bi bi-person-plus me-2"></i> Create Free Account
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-4 text-center d-none d-lg-block">
+                <div class="p-4 rounded-4" style="background: rgba(255,255,255,0.04); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1);">
+                    <i class="bi bi-film display-1 text-warning mb-3 d-block"></i>
+                    <h5 class="fw-bold text-white">Always Ready to Shoot</h5>
+                    <p class="text-white-50 small mb-0">Inspected, prepped, and certified cinema camera packages, lighting, audio and gimbal setups.</p>
+                </div>
+            </div>
+        </div>
     </div>
 }
 else
 {
-    <div class="row g-4">
-        @foreach (var item in Model)
-        {
-            <div class="col-md-6 col-lg-4">
-                <div class="card h-100 card-equipment rounded-3">
-                    <div class="card-body d-flex flex-column">
-                        <div class="d-flex justify-content-between align-items-start mb-2">
-                            <span class="badge bg-secondary-subtle text-secondary-emphasis border">@item.Category</span>
-                            <span class="text-success small fw-semibold">
-                                <i class="bi bi-box-seam"></i> @item.TotalStock Total Units
-                            </span>
-                        </div>
-                        <h5 class="card-title fw-bold">@item.Name</h5>
-                        <p class="card-text text-muted small flex-grow-1">@item.Description</p>
-                        <hr class="my-3" />
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <span class="fs-4 fw-bold text-dark">$@item.DailyRate.ToString("F2")</span>
-                                <span class="text-muted small">/ day</span>
-                            </div>
-                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-warning fw-semibold btn-sm px-3">
-                                Check Availability & Rent <i class="bi bi-arrow-right ms-1"></i>
-                            </a>
-                        </div>
+    <!-- ================================================= -->
+    <!-- 2. LANDING PAGE / DASHBOARD FOR LOGGED-IN CUSTOMER -->
+    <!-- ================================================= -->
+    <div class="p-4 p-md-5 mb-5 rounded-4 shadow-sm position-relative overflow-hidden" 
+         style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: #ffffff; border: 1px solid rgba(255, 255, 255, 0.08);">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <div class="d-flex align-items-center gap-2 mb-2">
+                    <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-1 rounded-pill fw-semibold">
+                        <i class="bi bi-shield-check me-1"></i> Active Customer Portal
+                    </span>
+                    <span class="text-white-50 small">&bull; Welcome back!</span>
+                </div>
+                <h2 class="fw-bold mb-2">Hello, @User.Identity?.Name 👋</h2>
+                <p class="text-white-50 mb-4">
+                    Ready to book equipment for your next shoot? Browse the inventory, verify date ranges, and keep track of your approved rentals in one single place.
+                </p>
+                <div class="d-flex flex-wrap gap-2">
+                    <a href="#catalog-section" class="btn btn-warning fw-bold rounded-pill px-4 text-dark">
+                        <i class="bi bi-search me-1"></i> Reserve Equipment
+                    </a>
+                    @if (User.IsInRole(Roles.Customer))
+                    {
+                        <a asp-controller="Rentals" asp-action="MyRentals" class="btn btn-outline-light rounded-pill px-4">
+                            <i class="bi bi-receipt-cutoff me-1"></i> Go to My Rentals
+                        </a>
+                    }
+                </div>
+            </div>
+            <div class="col-lg-4 mt-4 mt-lg-0">
+                <div class="bg-white bg-opacity-10 p-3 rounded-3 border border-white border-opacity-10">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="text-white-50 small">Quick Status</span>
+                        <i class="bi bi-info-circle text-warning"></i>
+                    </div>
+                    <div class="small text-white-50">
+                        Maximum <strong>3 active rentals</strong> permitted at a time. All equipment includes strict quality check before release.
                     </div>
                 </div>
             </div>
-        }
+        </div>
     </div>
 }
+
+<!-- ========================================== -->
+<!-- CATALOG FILTER & GEAR FLEET GRID           -->
+<!-- ========================================== -->
+<div id="catalog-section" class="pt-2">
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+        <div>
+            <h3 class="fw-bold mb-1 d-flex align-items-center gap-2">
+                <i class="bi bi-sliders text-warning"></i> Available Gear Inventory
+            </h3>
+            <p class="text-muted small mb-0">Select an item to view live stock and check availability for your shoot dates.</p>
+        </div>
+        <div class="d-flex gap-2 mt-3 mt-md-0 flex-wrap">
+            <a asp-action="Index" class="btn btn-sm rounded-pill px-3 @(string.IsNullOrEmpty(selectedCategory) ? "btn-dark fw-bold" : "btn-outline-secondary")">
+                All Gear
+            </a>
+            @foreach (var cat in categories)
+            {
+                <a asp-action="Index" asp-route-category="@cat"
+                   class="btn btn-sm rounded-pill px-3 @(string.Equals(selectedCategory, cat, StringComparison.OrdinalIgnoreCase) ? "btn-dark fw-bold" : "btn-outline-secondary")">
+                    @cat
+                </a>
+            }
+        </div>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="card border-0 shadow-sm p-5 text-center rounded-4">
+            <i class="bi bi-camera-video-off display-4 text-muted mb-3"></i>
+            <h5 class="fw-bold">No active gear in this category</h5>
+            <p class="text-muted mb-3">Try clearing the category filter to explore other available equipment.</p>
+            <div>
+                <a asp-action="Index" class="btn btn-dark btn-sm rounded-pill px-3">View All Equipment</a>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row g-4">
+            @foreach (var item in Model)
+            {
+                var gearImg = EquipmentImageHelper.GetImageUrl(item.Category, item.Name);
+
+                <div class="col-md-6 col-lg-4">
+                    <div class="gear-card h-100 d-flex flex-column shadow-sm">
+                        <!-- Product Image Box -->
+                        <div class="gear-img-wrap">
+                            <img src="@gearImg" alt="@item.Name" loading="lazy" />
+                            <span class="badge-category">
+                                <i class="bi bi-tag-fill me-1 text-warning"></i> @item.Category
+                            </span>
+                        </div>
+
+                        <!-- Card Body -->
+                        <div class="p-4 d-flex flex-column flex-grow-1">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill small">
+                                    <i class="bi bi-check2-circle"></i> @item.TotalStock Units in Fleet
+                                </span>
+                            </div>
+
+                            <h5 class="fw-bold text-dark mb-2">@item.Name</h5>
+                            <p class="text-muted small mb-4 flex-grow-1" style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">
+                                @item.Description
+                            </p>
+
+                            <hr class="my-3 text-muted opacity-25" />
+
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <span class="fs-4 fw-extrabold text-dark">$@item.DailyRate.ToString("F2")</span>
+                                    <span class="text-muted small">/day</span>
+                                </div>
+                                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-rent px-3 py-2 small shadow-sm d-flex align-items-center gap-1">
+                                    <span>Check & Rent</span>
+                                    <i class="bi bi-chevron-right fs-6"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
