@@ -1,0 +1,19 @@
+## Build and temporary directories
+[Bb]in/
+[Oo]bj/
+[Oo]ut/
+
+## IDE and Editor configurations
+.idea/
+.vscode/
+.vs/
+*.user
+*.userosscache
+*.suo
+*.sln.docstates
+*.swp
+*~
+
+## OS generated
+.DS_Store
+Thumbs.db

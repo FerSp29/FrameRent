@@ -1,0 +1,42 @@
+@model RegisterViewModel
+@{
+    ViewData["Title"] = "Customer Registration";
+}
+
+<div class="row justify-content-center mt-4">
+    <div class="col-md-5">
+        <div class="card border-0 shadow-sm rounded-3 p-4">
+            <h3 class="fw-bold mb-1 text-center">Create Customer Account</h3>
+            <p class="text-muted text-center small mb-4">Register to rent audiovisual gear for your productions.</p>
+
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger small"></div>
+
+            <form asp-action="Register" method="post">
+                <div class="mb-3">
+                    <label asp-for="Email" class="form-label fw-semibold"></label>
+                    <input asp-for="Email" class="form-control" placeholder="creator@studio.com" />
+                    <span asp-validation-for="Email" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Password" class="form-label fw-semibold"></label>
+                    <input asp-for="Password" class="form-control" placeholder="Min 6 chars, uppercase, lowercase & digit" />
+                    <span asp-validation-for="Password" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="ConfirmPassword" class="form-label fw-semibold">Confirm Password</label>
+                    <input asp-for="ConfirmPassword" class="form-control" placeholder="Repeat your password" />
+                    <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
+                </div>
+
+                <button type="submit" class="btn btn-warning w-100 fw-bold py-2">Register as Customer</button>
+            </form>
+
+            <hr class="my-4" />
+            <p class="text-center small mb-0">
+                Already have an account? <a asp-action="Login" class="fw-semibold">Sign In</a>
+            </p>
+        </div>
+    </div>
+</div>

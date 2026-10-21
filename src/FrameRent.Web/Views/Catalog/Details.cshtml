@@ -1,0 +1,147 @@
+@model EquipmentDetailViewModel
+@{
+    ViewData["Title"] = Model.Equipment.Name;
+    int days = Model.CheckTo > Model.CheckFrom ? Model.CheckTo.DayNumber - Model.CheckFrom.DayNumber : 0;
+    decimal estimatedCostPerUnit = days * Model.Equipment.DailyRate;
+}
+
+<div class="mb-3">
+    <a asp-action="Index" class="text-decoration-none text-secondary small">
+        <i class="bi bi-arrow-left"></i> Back to Catalog
+    </a>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-7">
+        <div class="card border-0 shadow-sm rounded-3 p-4">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="badge bg-dark">@Model.Equipment.Category</span>
+                <span class="badge bg-success-subtle text-success border border-success-subtle">Active Equipment</span>
+            </div>
+            <h2 class="fw-bold mb-3">@Model.Equipment.Name</h2>
+            <p class="text-secondary fs-6">@Model.Equipment.Description</p>
+
+            <div class="row g-3 my-2">
+                <div class="col-sm-6">
+                    <div class="p-3 bg-light rounded-3 border">
+                        <div class="text-muted small">Daily Rental Rate</div>
+                        <div class="fs-3 fw-bold text-dark">$@Model.Equipment.DailyRate.ToString("F2") <span class="fs-6 fw-normal text-muted">/ day</span></div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="p-3 bg-light rounded-3 border">
+                        <div class="text-muted small">Total Fleet Stock</div>
+                        <div class="fs-3 fw-bold text-dark">@Model.Equipment.TotalStock <span class="fs-6 fw-normal text-muted">units</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="my-4" />
+
+            <h5 class="fw-bold mb-3"><i class="bi bi-calendar-range me-2"></i>Check Availability by Date Range</h5>
+            <form asp-action="Details" method="get" class="row g-3 align-items-end">
+                <input type="hidden" name="id" value="@Model.Equipment.Id" />
+                <div class="col-sm-5">
+                    <label class="form-label small fw-semibold">Start Date (From)</label>
+                    <input type="date" name="from" value="@Model.CheckFrom.ToString("yyyy-MM-dd")" class="form-control" required />
+                </div>
+                <div class="col-sm-5">
+                    <label class="form-label small fw-semibold">End Date (To)</label>
+                    <input type="date" name="to" value="@Model.CheckTo.ToString("yyyy-MM-dd")" class="form-control" required />
+                </div>
+                <div class="col-sm-2">
+                    <button type="submit" class="btn btn-dark w-100">Check</button>
+                </div>
+            </form>
+
+            @if (Model.Availability != null)
+            {
+                <div class="mt-4 p-3 rounded-3 @(Model.Availability.AvailableUnits > 0 ? "bg-success-subtle border border-success" : "bg-danger-subtle border border-danger")">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="fw-bold mb-1">
+                                Availability from @Model.Availability.From.ToString("yyyy-MM-dd") to @Model.Availability.To.ToString("yyyy-MM-dd") (@days days)
+                            </h6>
+                            <p class="mb-0 small">
+                                Reserved in range: <strong>@Model.Availability.ReservedUnits</strong> |
+                                Available to rent: <strong>@Model.Availability.AvailableUnits of @Model.Availability.TotalStock units</strong>
+                            </p>
+                        </div>
+                        <span class="fs-3 fw-bold">@Model.Availability.AvailableUnits Available</span>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="col-lg-5">
+        <div class="card border-0 shadow-sm rounded-3 p-4">
+            <h4 class="fw-bold mb-3"><i class="bi bi-bag-plus me-2 text-warning"></i>Request Rental</h4>
+
+            @if (User.Identity?.IsAuthenticated != true)
+            {
+                <div class="alert alert-info mb-0">
+                    <p class="mb-2">Please sign in or register as a customer to request an equipment rental.</p>
+                    <a asp-controller="Account" asp-action="Login" class="btn btn-dark btn-sm me-2">Login</a>
+                    <a asp-controller="Account" asp-action="Register" class="btn btn-warning btn-sm fw-semibold">Register</a>
+                </div>
+            }
+            else if (!User.IsInRole(Roles.Customer))
+            {
+                <div class="alert alert-warning mb-0">
+                    You are signed in as <strong>Staff</strong>. Only customer accounts can submit rental requests from the client portal.
+                </div>
+            }
+            else
+            {
+                <form asp-controller="Rentals" asp-action="Create" method="post">
+                    <input type="hidden" name="equipmentId" value="@Model.Equipment.Id" />
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Start Date</label>
+                        <input type="date" name="startDate" value="@Model.CheckFrom.ToString("yyyy-MM-dd")"
+                               min="@DateOnly.FromDateTime(DateTime.UtcNow).ToString("yyyy-MM-dd")"
+                               class="form-control" required />
+                        <div class="form-text">Start date cannot be in the past.</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">End Date</label>
+                        <input type="date" name="endDate" value="@Model.CheckTo.ToString("yyyy-MM-dd")"
+                               class="form-control" required />
+                        <div class="form-text">Maximum rental duration is 15 days.</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Quantity (Units)</label>
+                        <input type="number" name="quantity" value="1" min="1"
+                               max="@(Model.Availability?.AvailableUnits > 0 ? Model.Availability.AvailableUnits : Model.Equipment.TotalStock)"
+                               class="form-control" required />
+                    </div>
+
+                    @if (days > 0)
+                    {
+                        <div class="p-3 bg-light rounded-3 border mb-3 small">
+                            <div class="d-flex justify-content-between">
+                                <span>Duration:</span>
+                                <strong>@days day(s)</strong>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <span>Rate per unit:</span>
+                                <strong>$@estimatedCostPerUnit.ToString("F2")</strong>
+                            </div>
+                            <div class="text-muted mt-1">
+                                * Final total cost is calculated automatically by the system (days × daily rate × quantity).
+                            </div>
+                        </div>
+                    }
+
+                    <button type="submit" class="btn btn-warning w-100 fw-bold py-2"
+                            @(Model.Availability != null && Model.Availability.AvailableUnits == 0 ? "disabled" : "")>
+                        Submit Rental Request
+                    </button>
+                </form>
+            }
+        </div>
+    </div>
+</div>

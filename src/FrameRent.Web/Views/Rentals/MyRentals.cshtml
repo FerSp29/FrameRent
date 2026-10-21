@@ -1,0 +1,109 @@
+@model IEnumerable<RentalResponseDto>
+@{
+    ViewData["Title"] = "My Rentals";
+    var today = DateOnly.FromDateTime(DateTime.UtcNow);
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="h3 fw-bold mb-1">My Equipment Rentals</h1>
+        <p class="text-muted mb-0">Track the status of your rental requests, costs, and return dates.</p>
+    </div>
+    <a asp-controller="Catalog" asp-action="Index" class="btn btn-dark btn-sm">
+        <i class="bi bi-plus-lg me-1"></i> New Rental Request
+    </a>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="card border-0 shadow-sm p-5 text-center">
+        <i class="bi bi-bag-x display-4 text-muted mb-3"></i>
+        <h5>You have no rentals yet</h5>
+        <p class="text-muted">Browse our audiovisual catalog and request your first equipment rental.</p>
+        <div>
+            <a asp-controller="Catalog" asp-action="Index" class="btn btn-warning fw-semibold">Explore Catalog</a>
+        </div>
+    </div>
+}
+else
+{
+    <div class="card border-0 shadow-sm rounded-3 overflow-hidden">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Equipment</th>
+                        <th>Dates</th>
+                        <th>Qty</th>
+                        <th>Total Cost</th>
+                        <th>Late Fee</th>
+                        <th>Status</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var rental in Model)
+                    {
+                        var badgeClass = rental.Status switch
+                        {
+                            "Pending" => "bg-warning text-dark",
+                            "Approved" => "bg-primary",
+                            "Delivered" => "bg-info text-dark",
+                            "Returned" => "bg-success",
+                            "Rejected" => "bg-danger",
+                            "Cancelled" => "bg-secondary",
+                            _ => "bg-dark"
+                        };
+
+                        bool canCancel = (rental.Status == "Pending" || rental.Status == "Approved") && today < rental.StartDate;
+
+                        <tr>
+                            <td>
+                                <div class="fw-bold">@rental.EquipmentName</div>
+                                <div class="small text-muted">@rental.EquipmentCategory &bull; $@rental.DailyRate.ToString("F2")/day</div>
+                            </td>
+                            <td>
+                                <div>@rental.StartDate.ToString("yyyy-MM-dd") &rarr; @rental.EndDate.ToString("yyyy-MM-dd")</div>
+                                <div class="small text-muted">@rental.TotalDays day(s)</div>
+                            </td>
+                            <td>@rental.Quantity</td>
+                            <td class="fw-semibold">$@rental.TotalCost.ToString("F2")</td>
+                            <td>
+                                @if (rental.LateFee > 0)
+                                {
+                                    <span class="text-danger fw-bold">$@rental.LateFee.ToString("F2")</span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">$0.00</span>
+                                }
+                            </td>
+                            <td>
+                                <span class="badge @badgeClass">@rental.Status</span>
+                                @if (rental.ActualReturnDate.HasValue)
+                                {
+                                    <div class="small text-muted mt-1">Returned: @rental.ActualReturnDate.Value.ToString("yyyy-MM-dd")</div>
+                                }
+                            </td>
+                            <td class="text-end">
+                                @if (canCancel)
+                                {
+                                    <form asp-action="Cancel" asp-route-id="@rental.Id" method="post" class="d-inline"
+                                          onsubmit="return confirm('Are you sure you want to cancel this rental?');">
+                                        <button type="submit" class="btn btn-outline-danger btn-sm">
+                                            <i class="bi bi-x-circle"></i> Cancel
+                                        </button>
+                                    </form>
+                                }
+                                else
+                                {
+                                    <span class="text-muted small">&mdash;</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}

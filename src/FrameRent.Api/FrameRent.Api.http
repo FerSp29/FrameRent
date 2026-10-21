@@ -1,0 +1,58 @@
+@BaseAddress = http://localhost:5286
+@Token = YOUR_JWT_TOKEN_HERE
+
+### 1. Register Customer
+POST {{BaseAddress}}/api/v1/auth/register
+Content-Type: application/json
+
+{
+  "email": "customer1@studio.com",
+  "password": "Customer123!"
+}
+
+### 2. Login as Staff (Default Seeded Account)
+POST {{BaseAddress}}/api/v1/auth/login
+Content-Type: application/json
+
+{
+  "email": "staff@framerent.com",
+  "password": "StaffPassword123!"
+}
+
+### 3. Get Active Equipment Catalog (Public)
+GET {{BaseAddress}}/api/v1/equipment
+Accept: application/json
+
+### 4. Check Equipment Availability (Public)
+GET {{BaseAddress}}/api/v1/equipment/00000000-0000-0000-0000-000000000000/availability?from=2026-11-01&to=2026-11-05
+Accept: application/json
+
+### 5. Create Equipment (Staff Only)
+POST {{BaseAddress}}/api/v1/equipment
+Authorization: Bearer {{Token}}
+Content-Type: application/json
+
+{
+  "name": "RED V-Raptor 8K VV",
+  "category": "Cameras",
+  "description": "Flagship 8K Vista Vision cinema camera.",
+  "dailyRate": 250.00,
+  "totalStock": 2
+}
+
+### 6. Request Rental (Customer Only)
+POST {{BaseAddress}}/api/v1/rentals
+Authorization: Bearer {{Token}}
+Content-Type: application/json
+
+{
+  "equipmentId": "00000000-0000-0000-0000-000000000000",
+  "quantity": 1,
+  "startDate": "2026-11-01",
+  "endDate": "2026-11-05"
+}
+
+### 7. Top Rented Equipment Report (Staff Only)
+GET {{BaseAddress}}/api/v1/reports/topequipment
+Authorization: Bearer {{Token}}
+Accept: application/json
