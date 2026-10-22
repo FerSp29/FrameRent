@@ -6,7 +6,7 @@
 
 <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
     <div>
-        <h2 class="fw-bold mb-1 text-dark d-flex align-items-center gap-2">
+        <h2 class="fw-bold mb-1 d-flex align-items-center gap-2">
             <i class="bi bi-calendar-check text-warning"></i> My Equipment Rentals
         </h2>
         <p class="text-muted small mb-0">Track all your equipment bookings, pickup dates, return statuses, and invoices.</p>
@@ -102,42 +102,13 @@ else
                             <td class="text-end pe-4">
                                 @if (canCancel)
                                 {
-                                    <!-- Beautiful in-app custom modal trigger (No native browser window.confirm popup) -->
-                                    <button type="button" class="btn btn-outline-danger btn-sm rounded-pill px-3 fw-semibold"
-                                            data-bs-toggle="modal" data-bs-target="#cancelModal-@rental.Id">
-                                        <i class="bi bi-x-circle me-1"></i> Cancel
-                                    </button>
-
-                                    <!-- Elegant Modal Confirmation Box -->
-                                    <div class="modal fade" id="cancelModal-@rental.Id" tabindex="-1" aria-labelledby="cancelModalLabel-@rental.Id" aria-hidden="true">
-                                        <div class="modal-dialog modal-dialog-centered">
-                                            <div class="modal-content rounded-4 border-0 shadow-lg p-3">
-                                                <div class="modal-header border-0 pb-0">
-                                                    <div class="p-2 rounded-circle bg-danger bg-opacity-10 text-danger me-2">
-                                                        <i class="bi bi-exclamation-triangle-fill fs-5"></i>
-                                                    </div>
-                                                    <h5 class="modal-title fw-bold" id="cancelModalLabel-@rental.Id">Cancel Reservation?</h5>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                </div>
-                                                <div class="modal-body text-start py-3 text-muted small">
-                                                    Are you sure you want to cancel the reservation for <strong class="text-body">@rental.EquipmentName</strong>?
-                                                    <div class="mt-2 p-2 rounded-3 bg-body-tertiary border">
-                                                        <div>Duration: <strong>@rental.StartDate.ToString("yyyy-MM-dd")</strong> to <strong>@rental.EndDate.ToString("yyyy-MM-dd")</strong></div>
-                                                        <div>Refund amount: <strong>$@rental.TotalCost.ToString("F2")</strong></div>
-                                                    </div>
-                                                    <div class="mt-2 text-danger">This action cannot be undone.</div>
-                                                </div>
-                                                <div class="modal-footer border-0 pt-0 d-flex gap-2">
-                                                    <button type="button" class="btn btn-outline-secondary rounded-pill px-4 btn-sm" data-bs-dismiss="modal">Keep Booking</button>
-                                                    <form asp-action="Cancel" asp-route-id="@rental.Id" method="post" class="d-inline">
-                                                        <button type="submit" class="btn btn-danger rounded-pill px-4 btn-sm fw-bold">
-                                                            Yes, Cancel Rental
-                                                        </button>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <!-- Simple, rock-solid cancellation form with inline styled confirm dialog -->
+                                    <form asp-action="Cancel" asp-route-id="@rental.Id" method="post" class="d-inline cancel-rental-form"
+                                          data-equipment-name="@rental.EquipmentName">
+                                        <button type="button" class="btn btn-outline-danger btn-sm rounded-pill px-3 fw-semibold trigger-cancel-btn">
+                                            <i class="bi bi-x-circle me-1"></i> Cancel
+                                        </button>
+                                    </form>
                                 }
                                 else
                                 {
@@ -151,3 +122,72 @@ else
         </div>
     </div>
 }
+
+<!-- Single Global Clean In-App Cancellation Modal (Placed outside table to prevent z-index/clipping bugs) -->
+<div class="modal fade" id="globalCancelModal" tabindex="-1" aria-labelledby="globalCancelModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-4 border-0 shadow-2xl p-3 gear-card">
+            <div class="modal-header border-0 pb-0">
+                <div class="p-2 rounded-circle bg-danger bg-opacity-10 text-danger me-2">
+                    <i class="bi bi-exclamation-triangle-fill fs-5"></i>
+                </div>
+                <h5 class="modal-title fw-bold" id="globalCancelModalLabel">Cancel Equipment Reservation?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-start py-3 text-muted small">
+                Are you sure you want to cancel the reservation for <strong class="text-body" id="modalEquipNameText"></strong>?
+                <div class="mt-2 p-3 rounded-3 bg-body-tertiary border text-body">
+                    <i class="bi bi-info-circle text-warning me-1"></i> Your reserved stock units will be released back to the fleet immediately.
+                </div>
+                <div class="mt-2 text-danger">This cancellation cannot be undone.</div>
+            </div>
+            <div class="modal-footer border-0 pt-0 d-flex gap-2">
+                <button type="button" class="btn btn-outline-secondary rounded-pill px-4 btn-sm" data-bs-dismiss="modal">Keep Booking</button>
+                <button type="button" class="btn btn-danger rounded-pill px-4 btn-sm fw-bold" id="confirmCancelSubmitBtn">
+                    Yes, Cancel Rental
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Bulletproof In-App Modal Handler for Cancellations
+    document.addEventListener('DOMContentLoaded', () => {
+        let activeFormToSubmit = null;
+        const modalElement = document.getElementById('globalCancelModal');
+        const modalEquipText = document.getElementById('modalEquipNameText');
+        const confirmBtn = document.getElementById('confirmCancelSubmitBtn');
+        const bsModal = modalElement ? new bootstrap.Modal(modalElement) : null;
+
+        document.querySelectorAll('.cancel-rental-form .trigger-cancel-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+
+                const form = btn.closest('.cancel-rental-form');
+                const equipName = form?.getAttribute('data-equipment-name') || 'this equipment';
+                
+                activeFormToSubmit = form;
+                if (modalEquipText) modalEquipText.textContent = equipName;
+
+                if (bsModal) {
+                    bsModal.show();
+                }
+            });
+        });
+
+        if (confirmBtn) {
+            confirmBtn.addEventListener('click', () => {
+                if (activeFormToSubmit) {
+                    // Trigger loader before submission
+                    const loader = document.getElementById('page-loader-overlay');
+                    if (loader) loader.classList.add('active');
+
+                    if (bsModal) bsModal.hide();
+                    activeFormToSubmit.submit();
+                }
+            });
+        }
+    });
+</script>
