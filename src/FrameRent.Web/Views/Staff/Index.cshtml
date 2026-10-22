@@ -1,0 +1,198 @@
+@model IEnumerable<RentalResponseDto>
+@{
+    ViewData["Title"] = "Staff Management & Fleet Orders";
+    var catalogStock = ViewBag.CatalogStock as IEnumerable<EquipmentResponseDto> ?? Enumerable.Empty<EquipmentResponseDto>();
+    var currentFilter = ViewBag.StatusFilter as string;
+}
+
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+    <div>
+        <div class="d-flex align-items-center gap-2 mb-1">
+            <span class="badge bg-warning text-dark fw-bold px-3 py-1 rounded-pill">
+                <i class="bi bi-shield-shaded me-1"></i> Staff Control Panel
+            </span>
+            <span class="text-muted small">&bull; Admin & Fleet Operations</span>
+        </div>
+        <h2 class="fw-bold mb-0 text-body">Manage Client Rentals & Inventory Stock</h2>
+    </div>
+
+    <!-- Status Filter Buttons -->
+    <div class="d-flex gap-2 flex-wrap">
+        <a asp-action="Index" class="btn btn-sm rounded-pill px-3 @(string.IsNullOrEmpty(currentFilter) ? "btn-warning text-dark fw-bold shadow-sm" : "btn-outline-secondary") page-link-trigger">
+            All Rentals
+        </a>
+        <a asp-action="Index" asp-route-status="Pending" class="btn btn-sm rounded-pill px-3 @(currentFilter == "Pending" ? "btn-warning text-dark fw-bold shadow-sm" : "btn-outline-secondary") page-link-trigger">
+            Pending
+        </a>
+        <a asp-action="Index" asp-route-status="Approved" class="btn btn-sm rounded-pill px-3 @(currentFilter == "Approved" ? "btn-warning text-dark fw-bold shadow-sm" : "btn-outline-secondary") page-link-trigger">
+            Approved
+        </a>
+        <a asp-action="Index" asp-route-status="Delivered" class="btn btn-sm rounded-pill px-3 @(currentFilter == "Delivered" ? "btn-warning text-dark fw-bold shadow-sm" : "btn-outline-secondary") page-link-trigger">
+            Delivered
+        </a>
+        <a asp-action="Index" asp-route-status="Returned" class="btn btn-sm rounded-pill px-3 @(currentFilter == "Returned" ? "btn-warning text-dark fw-bold shadow-sm" : "btn-outline-secondary") page-link-trigger">
+            Returned
+        </a>
+    </div>
+</div>
+
+<!-- SECTION 1: INVENTORY FLEET STOCK OVERVIEW (FOR STAFF EYES ONLY) -->
+<div class="card border-0 shadow-sm rounded-4 p-4 mb-4 gear-card">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="fw-bold mb-0 d-flex align-items-center gap-2">
+            <i class="bi bi-boxes text-warning"></i> Fleet Stock & Inventory Levels (Staff View)
+        </h5>
+        <span class="badge bg-info-subtle text-info border border-info-subtle px-2 py-1 rounded-pill small">
+            Internal Staff Only
+        </span>
+    </div>
+    <div class="row g-3">
+        @foreach (var gear in catalogStock)
+        {
+            var gearImg = EquipmentImageHelper.GetImageUrl(gear.Category, gear.Name);
+            <div class="col-sm-6 col-md-4 col-xl-2">
+                <div class="p-3 rounded-3 border bg-body-tertiary h-100 d-flex flex-column">
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                        <img src="@gearImg" alt="@gear.Name" class="rounded-2 shadow-sm" style="width: 36px; height: 36px; object-fit: cover;" />
+                        <div class="text-truncate small fw-bold" title="@gear.Name">@gear.Name</div>
+                    </div>
+                    <div class="mt-auto d-flex justify-content-between align-items-center pt-2 border-top">
+                        <span class="small text-muted">Total Stock:</span>
+                        <span class="badge bg-dark fw-bold fs-6">@gear.TotalStock units</span>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- SECTION 2: CLIENT ORDERS & LIFECYCLE MANAGEMENT -->
+<div class="card border-0 shadow-sm rounded-4 overflow-hidden gear-card">
+    <div class="p-3 bg-body-tertiary border-bottom d-flex justify-content-between align-items-center">
+        <h5 class="fw-bold mb-0 ps-2 d-flex align-items-center gap-2">
+            <i class="bi bi-list-check text-warning"></i> Customer Rental Orders
+        </h5>
+        <span class="text-muted small pe-2">Total orders listed: <strong>@Model.Count()</strong></span>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="p-5 text-center text-muted">
+            <i class="bi bi-inbox display-4 mb-2 d-block"></i>
+            <h6>No rentals found for the selected status</h6>
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-dark">
+                    <tr>
+                        <th class="ps-4">Equipment & Order ID</th>
+                        <th>Customer / Shoot Dates</th>
+                        <th>Requested</th>
+                        <th>Total Cost</th>
+                        <th>Late Fee</th>
+                        <th>Current Status</th>
+                        <th class="text-end pe-4">Staff Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var rental in Model)
+                    {
+                        var gearImg = EquipmentImageHelper.GetImageUrl(rental.EquipmentCategory, rental.EquipmentName);
+                        var badgeClass = rental.Status switch
+                        {
+                            "Pending" => "bg-warning text-dark",
+                            "Approved" => "bg-primary text-white",
+                            "Delivered" => "bg-info text-dark",
+                            "Returned" => "bg-success text-white",
+                            "Rejected" => "bg-danger text-white",
+                            "Cancelled" => "bg-secondary text-white",
+                            _ => "bg-dark"
+                        };
+
+                        <tr>
+                            <td class="ps-4">
+                                <div class="d-flex align-items-center gap-3">
+                                    <img src="@gearImg" alt="@rental.EquipmentName" class="rounded-3 shadow-sm" style="width: 50px; height: 50px; object-fit: cover;" />
+                                    <div>
+                                        <div class="fw-bold">@rental.EquipmentName</div>
+                                        <div class="text-muted small" style="font-size: 0.75rem;">ID: @rental.Id.ToString().Substring(0, 8)...</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="small fw-semibold text-truncate" style="max-width: 180px;" title="@rental.CustomerId">
+                                    <i class="bi bi-person me-1"></i>@rental.CustomerId
+                                </div>
+                                <div class="small text-muted">
+                                    @rental.StartDate.ToString("yyyy-MM-dd") &rarr; @rental.EndDate.ToString("yyyy-MM-dd") (@rental.TotalDays d)
+                                </div>
+                            </td>
+                            <td>
+                                <span class="badge bg-body-tertiary text-body border px-2 py-1">@rental.Quantity unit(s)</span>
+                            </td>
+                            <td class="fw-bold fs-6">$@rental.TotalCost.ToString("F2")</td>
+                            <td>
+                                @if (rental.LateFee > 0)
+                                {
+                                    <span class="badge bg-danger-subtle text-danger border border-danger-subtle fw-bold">+$@rental.LateFee.ToString("F2")</span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted small">$0.00</span>
+                                }
+                            </td>
+                            <td>
+                                <span class="badge @badgeClass rounded-pill px-3 py-2 fw-bold">@rental.Status</span>
+                            </td>
+                            <td class="text-end pe-4">
+                                <div class="d-flex justify-content-end gap-1">
+                                    @if (rental.Status == "Pending")
+                                    {
+                                        <!-- Approve button -->
+                                        <form asp-action="Approve" asp-route-id="@rental.Id" method="post" class="d-inline">
+                                            <button type="submit" class="btn btn-success btn-sm rounded-pill px-3 fw-bold" title="Approve rental and reserve stock">
+                                                <i class="bi bi-check-lg"></i> Approve
+                                            </button>
+                                        </form>
+
+                                        <!-- Reject button (e.g. no stock or customer issues) -->
+                                        <form asp-action="Reject" asp-route-id="@rental.Id" method="post" class="d-inline">
+                                            <button type="submit" class="btn btn-outline-danger btn-sm rounded-pill px-3 fw-bold" title="Reject request">
+                                                <i class="bi bi-x-lg"></i> Reject
+                                            </button>
+                                        </form>
+                                    }
+                                    else if (rental.Status == "Approved")
+                                    {
+                                        <!-- Deliver to customer -->
+                                        <form asp-action="Deliver" asp-route-id="@rental.Id" method="post" class="d-inline">
+                                            <button type="submit" class="btn btn-primary btn-sm rounded-pill px-3 fw-bold" title="Mark equipment as delivered">
+                                                <i class="bi bi-box-arrow-up-right me-1"></i> Deliver
+                                            </button>
+                                        </form>
+                                    }
+                                    else if (rental.Status == "Delivered")
+                                    {
+                                        <!-- Receive return and calculate late fees -->
+                                        <form asp-action="Return" asp-route-id="@rental.Id" method="post" class="d-inline">
+                                            <button type="submit" class="btn btn-warning btn-sm rounded-pill px-3 fw-bold text-dark" title="Receive return and compute late fees">
+                                                <i class="bi bi-arrow-return-left me-1"></i> Receive Return
+                                            </button>
+                                        </form>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted small">&mdash;</span>
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>

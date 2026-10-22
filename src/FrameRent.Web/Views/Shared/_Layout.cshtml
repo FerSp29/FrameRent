@@ -291,6 +291,14 @@
                             </a>
                         </li>
                     }
+                    @if (User.Identity?.IsAuthenticated == true && User.IsInRole(Roles.Staff))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link page-link-trigger d-flex align-items-center gap-1 fw-bold text-warning" asp-controller="Staff" asp-action="Index">
+                                <i class="bi bi-shield-shaded"></i> Staff Management
+                            </a>
+                        </li>
+                    }
                 </ul>
 
                 <ul class="navbar-nav ms-auto align-items-center gap-3">
