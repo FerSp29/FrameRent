@@ -280,14 +280,14 @@
                 <ul class="navbar-nav me-auto ps-lg-3">
                     <li class="nav-item">
                         <a class="nav-link page-link-trigger d-flex align-items-center gap-1" asp-controller="Catalog" asp-action="Index">
-                            <i class="bi bi-grid-fill text-warning"></i> Catalog
+                            <i class="bi bi-grid-fill text-warning"></i> Catálogo
                         </a>
                     </li>
                     @if (User.Identity?.IsAuthenticated == true && User.IsInRole(Roles.Customer))
                     {
                         <li class="nav-item">
-                            <a class="nav-link page-link-trigger d-flex align-items-center gap-1" asp-controller="Rentals" asp-action="MyRentals">
-                                <i class="bi bi-calendar-check-fill text-warning"></i> My Rentals
+                            <a class="nav-link page-link-trigger d-flex align-items-center gap-1 fw-semibold text-warning" asp-controller="Rentals" asp-action="MyRentals">
+                                <i class="bi bi-bag-check-fill"></i> Mis Pedidos
                             </a>
                         </li>
                     }
@@ -295,7 +295,7 @@
                     {
                         <li class="nav-item">
                             <a class="nav-link page-link-trigger d-flex align-items-center gap-1 fw-bold text-warning" asp-controller="Staff" asp-action="Index">
-                                <i class="bi bi-shield-shaded"></i> Staff Management
+                                <i class="bi bi-shield-shaded"></i> Panel Staff
                             </a>
                         </li>
                     }
@@ -304,7 +304,7 @@
                 <ul class="navbar-nav ms-auto align-items-center gap-3">
                     <!-- Light / Dark Mode Toggle Button -->
                     <li class="nav-item">
-                        <button type="button" class="theme-toggle-btn shadow-sm" id="themeToggleBtn" title="Toggle Light / Dark Mode">
+                        <button type="button" class="theme-toggle-btn shadow-sm" id="themeToggleBtn" title="Alternar Modo Claro / Oscuro">
                             <i class="bi bi-sun-fill" id="themeIconSun" style="display: none;"></i>
                             <i class="bi bi-moon-stars-fill" id="themeIconMoon"></i>
                         </button>
@@ -313,7 +313,7 @@
                     @if (User.Identity?.IsAuthenticated == true)
                     {
                         <li class="nav-item text-body small d-flex align-items-center gap-2">
-                            <span class="text-muted">Hello,</span>
+                            <span class="text-muted">Hola,</span>
                             <span class="fw-bold">@User.Identity.Name</span>
                             @if (User.IsInRole(Roles.Staff))
                             {
@@ -321,13 +321,13 @@
                             }
                             else
                             {
-                                <span class="badge bg-primary text-white fw-bold">Customer</span>
+                                <span class="badge bg-primary text-white fw-bold">Cliente</span>
                             }
                         </li>
                         <li class="nav-item">
                             <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
                                 <button type="submit" class="btn btn-outline-secondary btn-sm rounded-pill px-3">
-                                    <i class="bi bi-box-arrow-right me-1"></i> Logout
+                                    <i class="bi bi-box-arrow-right me-1"></i> Salir
                                 </button>
                             </form>
                         </li>
@@ -336,12 +336,12 @@
                     {
                         <li class="nav-item">
                             <a class="btn btn-outline-secondary btn-sm rounded-pill px-3 page-link-trigger" asp-controller="Account" asp-action="Login">
-                                Sign In
+                                Iniciar Sesión
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="btn btn-warning btn-sm fw-bold rounded-pill px-3 page-link-trigger text-dark shadow-sm" asp-controller="Account" asp-action="Register">
-                                <i class="bi bi-person-plus-fill me-1"></i> Register
+                                <i class="bi bi-person-plus-fill me-1"></i> Registrarse
                             </a>
                         </li>
                     }

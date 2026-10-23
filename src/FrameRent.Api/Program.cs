@@ -93,4 +93,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 
+// Automatic redirect from root to Swagger UI for seamless localhost developer experience
+app.MapGet("/", () => Results.Redirect("/swagger"));
+
 app.Run();
